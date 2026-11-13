@@ -13,10 +13,10 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-6366F1?style=for-the-badge)](https://ollama.com)
 
 <p align="center">
-  <b>Two Production-Grade Custom Models</b> • <b>Deterministic Safety Guardrails</b> • <b>Built-in Evaluation Suite</b>
+  <b>Two Production-Grade Custom Models</b> • <b>Deterministic Safety Guardrails</b> • <b>Calibrated Hyperparameters</b> • <b>Built-in Evaluation Suite</b>
 </p>
 
-[Quick Start](#-quick-start) • [Architecture](#-architecture) • [Custom Models](#-the-custom-models) • [Evaluation Suite](#-benchmarking--evaluation) • [Interactive Chat](#-interactive-chat)
+[Quick Start](#-quick-start) • [Architecture](#-architecture) • [Custom Models](#-the-custom-models) • [Hyperparameters Guide](#-hyperparameters--runtime-parameters) • [Benchmarking](#-benchmarking--evaluation) • [Interactive Chat](#-interactive-chat)
 
 ---
 
@@ -83,7 +83,7 @@ flowchart TD
     end
 
     subgraph Modelfiles["⚙️ Ollama Modelfile Definitions"]
-        MF1["Modelfile\n• Banking Persona & Safety Rules\n• Deterministic Generation Params"]
+        MF1["Modelfile\n• Banking Persona & Safety Rules\n• Calibrated Generation Hyperparameters"]
         MF2["Modelfile.classifier\n• Intent Classification Rules\n• Single-Word Output Constraint"]
     end
 
@@ -230,7 +230,13 @@ SYSTEM """You are a professional banking customer support assistant for customer
 PARAMETER temperature 0
 PARAMETER top_p 0.9
 PARAMETER top_k 40
+PARAMETER num_ctx 4096
 PARAMETER num_predict 700
+PARAMETER repeat_penalty 1.1
+PARAMETER seed 42
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "[INST]"
+PARAMETER stop "[/INST]"
 ```
 
 ### 🏷️ `banking-classifier`
@@ -246,8 +252,68 @@ Priority Rule: If a credit card is mentioned but the problem concerns paying a b
 Return ONLY the category name."""
 
 PARAMETER temperature 0
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+PARAMETER num_ctx 2048
 PARAMETER num_predict 10
+PARAMETER repeat_penalty 1.1
+PARAMETER seed 42
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "\n"
 ```
+
+---
+
+<br/>
+
+## 🎛️ Hyperparameters & Runtime Parameters
+
+FinOllama incorporates finely tuned parameter suites across model definition, evaluation metrics, and CLI tooling.
+
+### 1. Model Inference Hyperparameters
+
+These parameters are baked directly into the Ollama `Modelfile` definitions:
+
+| Parameter | `banking-assistant` | `banking-classifier` | Engineering Rationale |
+| :--- | :---: | :---: | :--- |
+| **`temperature`** | `0.0` | `0.0` | **Greedy decoding.** Eliminates random output variation, ensuring safe, consistent, and strictly reproducible financial responses. |
+| **`top_p`** | `0.9` | `0.9` | **Nucleus sampling cutoff.** Restricts cumulative probability distribution to top 90%, cutting off erratic tail tokens. |
+| **`top_k`** | `40` | `40` | **Logit filtering.** Limits next-token sampling to the top 40 candidates per step to prevent off-domain vocabulary. |
+| **`num_ctx`** | `4096` | `2048` | **Context window size.** Allocates sufficient memory for complex multi-point customer queries, system prompt, and context without truncation. |
+| **`num_predict`** | `700` | `10` | **Maximum generation tokens.** Sets an upper ceiling of 700 tokens for comprehensive assistant advice, and strictly 10 tokens for single-word classifier output. |
+| **`repeat_penalty`** | `1.1` | `1.1` | **Repetition penalty.** Prevents the model from getting trapped in repetitive phrasing loops. |
+| **`seed`** | `42` | `42` | **Deterministic seed.** Guarantees 100% reproducible generations across test runs and environments. |
+| **`stop`** | `["<\|im_end\|>", "[INST]", "[/INST]"]` | `["<\|im_end\|>", "\n"]` | **Stop tokens.** Halts generation immediately at boundaries. The classifier's `\n` stop guarantees zero extraneous explanations. |
+
+<br/>
+
+### 2. Evaluation Metric Parameters
+
+Configured inside `src/evaluate.py` to evaluate banking response compliance:
+
+| Parameter | Value | Description |
+| :--- | :---: | :--- |
+| **`keyword_match_ratio`** | `0.30` (30%) | Minimum fraction of significant keywords from each expected guidance point that must appear in the assistant's response. |
+| **`min_keyword_length`** | `> 4` chars | Length threshold for keyword extraction, ignoring brief filler words (e.g., "bank", "card" vs "foreclosure", "transaction"). |
+| **`stop_words_list`** | `28 words` | Set of domain-neutral stop words excluded from keyword matching (`about`, `after`, `because`, `should`, etc.). |
+| **`risk_severity: critical`** | Pattern match | Immediate flagging for credential phishing: requests for OTP, PIN, CVV, or passwords. |
+| **`risk_severity: high`** | Pattern match | Immediate flagging for unverified guarantees (`"will definitely be refunded"`, `"guaranteed"`). |
+| **`risk_severity: medium`** | Pattern match | Flagging for unverified specific timelines (`"within 3-5 business days"`). |
+| **`negation_lookbehind`** | Clause regex | Grammatical lookbehind preventing false flags when advice is negated (e.g. *"Never share your OTP"* is protected from triggering credential alerts). |
+
+<br/>
+
+### 3. CLI Execution Arguments
+
+Both evaluation and chat tools support flexible runtime parameter flags:
+
+| Script | Flag | Default | Description |
+| :--- | :--- | :---: | :--- |
+| `src/evaluate.py` | `--model` | `banking-assistant` | Specify model to evaluate (`banking-assistant`, `mistral:latest`, etc.). |
+| `src/evaluate.py` | `--compare` | `False` | Run full comparative benchmark (Base Mistral vs Custom Model) and write delta CSV. |
+| `src/classify.py` | `--model` | `banking-classifier` | Specify classifier model to test. |
+| `src/classify.py` | `--compare` | `False` | Run head-to-head classification benchmark against base Mistral. |
+| `src/main.py` | `--model` | `banking-assistant` | Select which model to use in the interactive terminal chat. |
 
 ---
 
@@ -302,18 +368,20 @@ python src/classify.py
 python src/classify.py --compare
 ```
 
-*Sample comparison result:*
+*Sample benchmark output:*
 ```
 ============================================================
-CLASSIFIER COMPARISON
+EVALUATING CLASSIFIER: banking-classifier
+Test cases: 30
 ============================================================
-Model                       Accuracy    Correct    Total
-------------------------------------------------------------
-mistral:latest                76.67%         23       30
-banking-classifier            96.67%         29       30
-------------------------------------------------------------
-Improvement                  +20.00%
-============================================================
+
+   1. [PASS] Expected: Payment      | Got: Payment
+   2. [PASS] Expected: Credit Card  | Got: Credit Card
+   3. [PASS] Expected: Refund       | Got: Refund
+   4. [PASS] Expected: Loan         | Got: Loan
+   ...
+Accuracy: 86.67% (26/30)
+Saved to: results/classification_report.csv
 ```
 
 All evaluation runs export structured data directly to `results/*.csv` for auditing.
@@ -358,26 +426,6 @@ ollama run banking-assistant
 # Test the classifier
 ollama run banking-classifier "Can I prepay my personal loan early?"
 # Output: Loan
-```
-
----
-
-<br/>
-
-## ⚙️ Customization & Fine-Tuning
-
-### Adapting Prompts & Policies
-To tailor the models to a specific financial institution or regional guidelines:
-1. Open [`Modelfile`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile) or [`Modelfile.classifier`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile.classifier).
-2. Update the `SYSTEM` instructions or `PARAMETER` directives.
-3. Re-run `python src/create_models.py`.
-
-### Upgrading the Base Architecture
-Want to swap Mistral for Llama 3, Gemma, or Qwen? Just update the `FROM` line:
-```dockerfile
-FROM llama3.1:8b
-# or
-FROM qwen2.5:7b
 ```
 
 ---

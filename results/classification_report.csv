@@ -1,0 +1,31 @@
+message,expected,actual,result
+My credit card payment is overdue.,Payment,Payment,PASS
+I want to block my credit card.,Credit Card,Credit Card,PASS
+I need a refund for a failed transaction.,Refund,Refund,PASS
+What is my personal loan EMI?,Loan,Loan,PASS
+My payment failed yesterday.,Payment,Payment,PASS
+I want to increase my credit card limit.,Credit Card,Credit Card,PASS
+I paid my bill but the amount is still outstanding.,Payment,Payment,PASS
+The same UPI payment appears twice in my statement.,Payment,Payment,PASS
+My debit card payment was declined at a shop.,Payment,Payment,PASS
+I was charged a late fee even though I paid on time.,Payment,Payment,PASS
+I do not recognize a transaction on my credit card.,Credit Card,Credit Card,PASS
+My credit card was lost while travelling.,Credit Card,Credit Card,PASS
+Can I convert my credit card purchase into EMI?,Credit Card,Credit Card,PASS
+Why was my credit card application rejected?,Credit Card,Loan,FAIL
+I want to close my credit card account.,Credit Card,Credit Card,PASS
+"The merchant says my refund was issued, but I have not received it.",Refund,Refund,PASS
+I cancelled an order and need to check the refund status.,Refund,Refund,PASS
+I received only part of the refund for my purchase.,Refund,Refund,PASS
+A failed ATM withdrawal was debited from my account.,Refund,Payment,FAIL
+The merchant charged me but did not provide the service.,Refund,Refund,PASS
+How can I download my personal loan repayment schedule?,Loan,Loan,PASS
+I missed my personal loan EMI. What should I do?,Loan,Loan,PASS
+Can I make a part-prepayment on my personal loan?,Loan,Loan,PASS
+How can I obtain a loan foreclosure statement?,Loan,Loan,PASS
+I want to change the date of my loan EMI.,Loan,Loan,PASS
+Someone is asking me to share an OTP to reverse a transaction.,Credit Card,Refund,FAIL
+I clicked a suspicious banking link and entered my card details.,Credit Card,Credit Card,PASS
+I received a message claiming my bank account will be blocked unless I pay.,Payment,Payment,PASS
+A caller says they are from the bank and wants my PIN.,Credit Card,Credit Card,PASS
+I see an unfamiliar debit and need to report possible fraud.,Payment,Credit Card,FAIL

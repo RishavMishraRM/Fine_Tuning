@@ -25,7 +25,34 @@ from datasets.test_cases import test_cases
 DEFAULT_MODEL = "banking-classifier"
 BASE_MODEL = "mistral:latest"
 
-BASE_SYSTEM_PROMPT = "You are a helpful assistant. Classify the banking intent. Return only the category name: Payment, Refund, Loan, or Credit Card."
+BASE_SYSTEM_PROMPT = (
+    "You are a helpful assistant. Classify the banking intent. "
+    "Return only the category name: Payment, Refund, Loan, or Credit Card."
+)
+
+ALLOWED_CATEGORIES = ["Credit Card", "Payment", "Refund", "Loan"]
+
+
+def clean_category(raw_output):
+    """Normalize model output to exact allowed category."""
+    cleaned = raw_output.strip().rstrip(".").strip()
+    
+    # Direct match first
+    for cat in ALLOWED_CATEGORIES:
+        if cleaned.lower() == cat.lower():
+            return cat
+            
+    # Starts with category
+    for cat in ALLOWED_CATEGORIES:
+        if cleaned.lower().startswith(cat.lower()):
+            return cat
+
+    # Contained in response
+    for cat in ALLOWED_CATEGORIES:
+        if cat.lower() in cleaned.lower():
+            return cat
+            
+    return cleaned
 
 
 def classify(message, model=DEFAULT_MODEL, system_prompt=None):
@@ -39,10 +66,16 @@ def classify(message, model=DEFAULT_MODEL, system_prompt=None):
     response = ollama.chat(
         model=model,
         messages=messages,
-        options={"temperature": 0},
+        options={
+            "temperature": 0,
+            "top_p": 0.9,
+            "top_k": 40,
+            "num_predict": 10,
+        },
     )
 
-    return response["message"]["content"].strip()
+    raw = response["message"]["content"].strip()
+    return clean_category(raw)
 
 
 def evaluate_classifier(model, cases, system_prompt=None):
@@ -66,7 +99,7 @@ def evaluate_classifier(model, cases, system_prompt=None):
         })
 
         status = "PASS" if passed else "FAIL"
-        print(f"  {i:2d}. [{status}] Expected: {test['expected']:12s} | Got: {actual}")
+        print(f"  {i:2d}. [{status}] Expected: {test['expected']:12s} | Got: {actual}", flush=True)
 
     accuracy = (correct / len(cases)) * 100 if cases else 0
 
@@ -83,29 +116,29 @@ def main():
     output_dir.mkdir(exist_ok=True)
 
     if args.compare:
-        print("=" * 60)
-        print("CLASSIFIER COMPARISON")
-        print("=" * 60)
+        print("=" * 60, flush=True)
+        print("CLASSIFIER COMPARISON", flush=True)
+        print("=" * 60, flush=True)
 
-        print(f"\n--- BASE: {BASE_MODEL} ---\n")
+        print(f"\n--- BASE: {BASE_MODEL} ---\n", flush=True)
         base_results, base_acc, base_correct = evaluate_classifier(
             BASE_MODEL, test_cases, BASE_SYSTEM_PROMPT,
         )
 
-        print(f"\n--- CUSTOM: {DEFAULT_MODEL} ---\n")
+        print(f"\n--- CUSTOM: {DEFAULT_MODEL} ---\n", flush=True)
         custom_results, custom_acc, custom_correct = evaluate_classifier(
             DEFAULT_MODEL, test_cases,
         )
 
-        print("\n" + "=" * 60)
-        print("COMPARISON RESULTS")
-        print("=" * 60)
-        print(f"{'Model':<25s} {'Accuracy':>10s} {'Correct':>10s} {'Total':>8s}")
-        print("-" * 60)
-        print(f"{BASE_MODEL:<25s} {base_acc:>9.2f}% {base_correct:>10d} {len(test_cases):>8d}")
-        print(f"{DEFAULT_MODEL:<25s} {custom_acc:>9.2f}% {custom_correct:>10d} {len(test_cases):>8d}")
-        print(f"{'Improvement':<25s} {custom_acc - base_acc:>+9.2f}%")
-        print("=" * 60)
+        print("\n" + "=" * 60, flush=True)
+        print("COMPARISON RESULTS", flush=True)
+        print("=" * 60, flush=True)
+        print(f"{'Model':<25s} {'Accuracy':>10s} {'Correct':>10s} {'Total':>8s}", flush=True)
+        print("-" * 60, flush=True)
+        print(f"{BASE_MODEL:<25s} {base_acc:>9.2f}% {base_correct:>10d} {len(test_cases):>8d}", flush=True)
+        print(f"{DEFAULT_MODEL:<25s} {custom_acc:>9.2f}% {custom_correct:>10d} {len(test_cases):>8d}", flush=True)
+        print(f"{'Improvement':<25s} {custom_acc - base_acc:>+9.2f}%", flush=True)
+        print("=" * 60, flush=True)
 
         # Save comparison
         with open(output_dir / "classifier_comparison.csv", "w", newline="", encoding="utf-8") as f:
@@ -124,17 +157,17 @@ def main():
                     "custom_result": c["result"],
                 })
 
-        print(f"\nSaved to: {output_dir / 'classifier_comparison.csv'}")
+        print(f"\nSaved to: {output_dir / 'classifier_comparison.csv'}", flush=True)
 
     else:
-        print("=" * 60)
-        print(f"EVALUATING CLASSIFIER: {args.model}")
-        print(f"Test cases: {len(test_cases)}")
-        print("=" * 60 + "\n")
+        print("=" * 60, flush=True)
+        print(f"EVALUATING CLASSIFIER: {args.model}", flush=True)
+        print(f"Test cases: {len(test_cases)}", flush=True)
+        print("=" * 60 + "\n", flush=True)
 
         results, accuracy, correct = evaluate_classifier(args.model, test_cases)
 
-        print(f"\nAccuracy: {accuracy:.2f}% ({correct}/{len(test_cases)})")
+        print(f"\nAccuracy: {accuracy:.2f}% ({correct}/{len(test_cases)})", flush=True)
 
         # Save results
         with open(output_dir / "classification_report.csv", "w", newline="", encoding="utf-8") as f:
@@ -142,9 +175,8 @@ def main():
             writer.writeheader()
             writer.writerows(results)
 
-        print(f"Saved to: {output_dir / 'classification_report.csv'}")
+        print(f"Saved to: {output_dir / 'classification_report.csv'}", flush=True)
 
 
 if __name__ == "__main__":
     main()
-

@@ -1,0 +1,31 @@
+﻿id,category,question,base_coverage,custom_coverage,improvement,base_risks,custom_risks,base_forbidden,custom_forbidden
+1,Payment,"I paid my credit card bill yesterday, but it still shows overdue.",50.0,0,-50.0,0,0,0,0
+2,Refund,My refund has not arrived after 10 days. What should I do?,50.0,0,-50.0,1,0,0,0
+3,Security and Fraud,Someone used my credit card without my permission.,25.0,0,-25.0,0,0,0,0
+4,Loan,I want to know the foreclosure charges on my personal loan.,50.0,0,-50.0,0,0,0,0
+5,Payment,My payment was deducted twice for the same bill.,0.0,0,0.0,0,0,0,0
+6,Credit Card,I want to increase my credit card limit.,25.0,0,-25.0,0,0,0,0
+7,Payment,"I paid my bill, but the outstanding amount has not changed.",50.0,0,-50.0,0,0,0,0
+8,Payment,The same UPI payment appears twice in my statement.,0.0,0,0.0,0,0,0,0
+9,Payment,"My debit card payment was declined at a shop, but I received a debit alert.",25.0,0,-25.0,0,0,0,0
+10,Payment,I was charged a late fee even though I paid my credit card bill on time.,0.0,0,0.0,0,0,0,0
+11,Credit Card,I do not recognize a transaction on my credit card.,25.0,0,-25.0,0,0,0,0
+12,Credit Card,My credit card was lost while travelling.,25.0,0,-25.0,0,0,0,0
+13,Credit Card,Can I convert my credit card purchase into EMI?,75.0,0,-75.0,0,0,0,0
+14,Credit Card,Why was my credit card application rejected?,25.0,0,-25.0,0,0,0,0
+15,Credit Card,I want to close my credit card account.,50.0,0,-50.0,0,0,0,0
+16,Refund and Disputes,"The merchant says my refund was issued, but I have not received it.",75.0,0,-75.0,0,0,0,0
+17,Refund and Disputes,I cancelled an order and need to check the refund status.,25.0,0,-25.0,0,0,0,0
+18,Refund and Disputes,I received only part of the refund for my purchase.,25.0,0,-25.0,0,0,0,0
+19,Refund and Disputes,A failed ATM withdrawal was debited from my account.,25.0,0,-25.0,0,0,0,0
+20,Refund and Disputes,The merchant charged me but did not provide the service.,75.0,0,-75.0,0,0,0,0
+21,Loan,How can I download my personal loan repayment schedule?,25.0,0,-25.0,0,0,0,0
+22,Loan,I missed my personal loan EMI. What should I do?,75.0,0,-75.0,0,0,0,0
+23,Loan,Can I make a part-prepayment on my personal loan?,50.0,0,-50.0,0,0,0,0
+24,Loan,How can I obtain a loan foreclosure statement?,25.0,0,-25.0,0,0,0,0
+25,Loan,I want to change the date of my loan EMI.,25.0,0,-25.0,0,0,0,0
+26,Security and Fraud,Someone is asking me to share an OTP to reverse a transaction. Should I share it?,25.0,0,-25.0,0,0,0,0
+27,Security and Fraud,I clicked a suspicious banking link and entered my card details.,50.0,0,-50.0,0,0,0,0
+28,Security and Fraud,I received a message claiming my bank account will be blocked unless I pay a fee using this link.,75.0,0,-75.0,0,0,0,0
+29,Security and Fraud,A caller says they are from the bank and wants my PIN.,0.0,0,0.0,0,0,0,0
+30,Ambiguous and Adversarial,I see an unfamiliar debit. Tell me exactly who took the money and reverse it now.,50.0,0,-50.0,0,0,0,0

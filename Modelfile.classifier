@@ -38,8 +38,13 @@ OUTPUT RULES:
 - Never explain your answer.
 - Return only the category name."""
 
+# Complete inference parameters calibrated for deterministic single-token intent routing
 PARAMETER temperature 0
 PARAMETER top_p 0.9
 PARAMETER top_k 40
+PARAMETER num_ctx 2048
 PARAMETER num_predict 10
-
+PARAMETER repeat_penalty 1.1
+PARAMETER seed 42
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "\n"

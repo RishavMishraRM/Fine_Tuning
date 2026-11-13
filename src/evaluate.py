@@ -161,6 +161,8 @@ def generate_response(question, model=DEFAULT_MODEL, system_prompt=None):
         messages=messages,
         options={
             "temperature": TEMPERATURE,
+            "top_p": 0.9,
+            "top_k": 40,
             "num_predict": NUM_PREDICT,
         },
     )
@@ -184,7 +186,7 @@ def evaluate_model(model, cases, system_prompt=None):
     results = []
 
     for case in cases:
-        print(f"  Case {case['id']:2d} | {case['category']:20s} | ", end="")
+        print(f"  Case {case['id']:2d} | {case['category']:20s} | ", end="", flush=True)
 
         try:
             gen = generate_response(case["question"], model, system_prompt)
@@ -219,7 +221,7 @@ def evaluate_model(model, cases, system_prompt=None):
 
             risk_marker = f" [{len(risks)} risks]" if risks else ""
             forbidden_marker = f" [FORBIDDEN!]" if forbidden_found else ""
-            print(f"Coverage: {coverage['coverage']:6.2f}%{risk_marker}{forbidden_marker}")
+            print(f"Coverage: {coverage['coverage']:6.2f}%{risk_marker}{forbidden_marker}", flush=True)
 
         except Exception as error:
             results.append({
@@ -235,7 +237,7 @@ def evaluate_model(model, cases, system_prompt=None):
                 "forbidden_found": 0,
                 "status": f"FAILED: {error}",
             })
-            print(f"FAILED: {error}")
+            print(f"FAILED: {error}", flush=True)
 
     return results
 
@@ -247,16 +249,16 @@ def evaluate_model(model, cases, system_prompt=None):
 def run_comparison(cases):
     """Compare base model vs custom model."""
 
-    print("\n" + "=" * 70)
-    print("MODEL COMPARISON: Base (mistral) vs Custom (banking-assistant)")
-    print("=" * 70)
+    print("\n" + "=" * 70, flush=True)
+    print("MODEL COMPARISON: Base (mistral) vs Custom (banking-assistant)", flush=True)
+    print("=" * 70, flush=True)
 
     # Evaluate base model
-    print(f"\n--- Evaluating BASE model: {BASE_MODEL} ---\n")
+    print(f"\n--- Evaluating BASE model: {BASE_MODEL} ---\n", flush=True)
     base_results = evaluate_model(BASE_MODEL, cases, system_prompt=SYSTEM_PROMPT_BASE)
 
     # Evaluate custom model
-    print(f"\n--- Evaluating CUSTOM model: {DEFAULT_MODEL} ---\n")
+    print(f"\n--- Evaluating CUSTOM model: {DEFAULT_MODEL} ---\n", flush=True)
     custom_results = evaluate_model(DEFAULT_MODEL, cases)
 
     # Save comparison CSV
@@ -299,17 +301,17 @@ def run_comparison(cases):
     base_forbidden = sum(r["forbidden_found"] for r in base_success)
     custom_forbidden = sum(r["forbidden_found"] for r in custom_success)
 
-    print("\n" + "=" * 70)
-    print("COMPARISON RESULTS")
-    print("=" * 70)
-    print(f"{'Metric':<30s} {'Base (mistral)':>15s} {'Custom':>15s} {'Delta':>10s}")
-    print("-" * 70)
-    print(f"{'Avg Coverage':<30s} {base_avg:>14.2f}% {custom_avg:>14.2f}% {custom_avg - base_avg:>+9.2f}%")
-    print(f"{'Total Risk Flags':<30s} {base_risks:>15d} {custom_risks:>15d} {custom_risks - base_risks:>+10d}")
-    print(f"{'Forbidden Claims Found':<30s} {base_forbidden:>15d} {custom_forbidden:>15d} {custom_forbidden - base_forbidden:>+10d}")
-    print(f"{'Successful Evaluations':<30s} {len(base_success):>15d} {len(custom_success):>15d}")
-    print(f"\nComparison saved to: {output_file}")
-    print("=" * 70)
+    print("\n" + "=" * 70, flush=True)
+    print("COMPARISON RESULTS", flush=True)
+    print("=" * 70, flush=True)
+    print(f"{'Metric':<30s} {'Base (mistral)':>15s} {'Custom':>15s} {'Delta':>10s}", flush=True)
+    print("-" * 70, flush=True)
+    print(f"{'Avg Coverage':<30s} {base_avg:>14.2f}% {custom_avg:>14.2f}% {custom_avg - base_avg:>+9.2f}%", flush=True)
+    print(f"{'Total Risk Flags':<30s} {base_risks:>15d} {custom_risks:>15d} {custom_risks - base_risks:>+10d}", flush=True)
+    print(f"{'Forbidden Claims Found':<30s} {base_forbidden:>15d} {custom_forbidden:>15d} {custom_forbidden - base_forbidden:>+10d}", flush=True)
+    print(f"{'Successful Evaluations':<30s} {len(base_success):>15d} {len(custom_success):>15d}", flush=True)
+    print(f"\nComparison saved to: {output_file}", flush=True)
+    print("=" * 70, flush=True)
 
 
 # ============================================================
@@ -319,10 +321,10 @@ def run_comparison(cases):
 def run_single(model, cases):
     """Evaluate a single model."""
 
-    print("\n" + "=" * 60)
-    print(f"EVALUATING MODEL: {model}")
-    print(f"Total test cases: {len(cases)}")
-    print("=" * 60 + "\n")
+    print("\n" + "=" * 60, flush=True)
+    print(f"EVALUATING MODEL: {model}", flush=True)
+    print(f"Total test cases: {len(cases)}", flush=True)
+    print("=" * 60 + "\n", flush=True)
 
     results = evaluate_model(model, cases)
 
@@ -341,15 +343,15 @@ def run_single(model, cases):
     avg_coverage = sum(r["coverage"] for r in successful) / len(successful) if successful else 0
     total_risks = sum(r["risk_count"] for r in successful)
 
-    print("\n" + "=" * 60)
-    print("EVALUATION SUMMARY")
-    print("=" * 60)
-    print(f"Model: {model}")
-    print(f"Successful: {len(successful)}/{len(cases)}")
-    print(f"Average coverage: {avg_coverage:.2f}%")
-    print(f"Total risk flags: {total_risks}")
-    print(f"Report saved to: {output_file}")
-    print("=" * 60)
+    print("\n" + "=" * 60, flush=True)
+    print("EVALUATION SUMMARY", flush=True)
+    print("=" * 60, flush=True)
+    print(f"Model: {model}", flush=True)
+    print(f"Successful: {len(successful)}/{len(cases)}", flush=True)
+    print(f"Average coverage: {avg_coverage:.2f}%", flush=True)
+    print(f"Total risk flags: {total_risks}", flush=True)
+    print(f"Report saved to: {output_file}", flush=True)
+    print("=" * 60, flush=True)
 
 
 # ============================================================
@@ -370,4 +372,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
