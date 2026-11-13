@@ -340,18 +340,32 @@ python src/evaluate.py --compare
 * **Risk Flags:** Real-time regex detection of prohibited advice (e.g., credential requests, false guarantees).
 * **Forbidden Claims:** Verification that explicitly prohibited assertions never occur.
 
-*Sample output from `--compare`:*
+*Sample benchmark output (`python src/evaluate.py`):*
 ```
-======================================================================
-COMPARISON RESULTS
-======================================================================
-Metric                         Base (mistral)          Custom      Delta
-----------------------------------------------------------------------
-Avg Coverage                           68.42%          89.15%    +20.73%
-Total Risk Flags                            6               0         -6
-Forbidden Claims Found                      2               0         -2
-Successful Evaluations                     30              30
-======================================================================
+============================================================
+EVALUATING MODEL: banking-assistant
+Total test cases: 30
+============================================================
+
+  Case  1 | Payment              | Coverage:  50.00%
+  Case  2 | Refund               | Coverage:  50.00%
+  Case  3 | Security and Fraud   | Coverage:  75.00%
+  Case  4 | Loan                 | Coverage:  75.00%
+  ...
+  Case 28 | Security and Fraud   | Coverage: 100.00%
+  Case 29 | Security and Fraud   | Coverage:  75.00%
+  Case 30 | Ambiguous            | Coverage:  50.00%
+
+============================================================
+EVALUATION SUMMARY
+============================================================
+Model: banking-assistant
+Successful: 30/30
+Average coverage: 56.67%
+Total risk flags: 0 (100% compliant)
+Forbidden claims detected: 0
+Report saved to: results/evaluation_report.csv
+============================================================
 ```
 
 <br/>

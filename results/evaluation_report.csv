@@ -1,0 +1,329 @@
+﻿id,category,question,response,coverage,matched_count,missing_count,missing_points,risk_count,forbidden_found,status
+1,Payment,"I paid my credit card bill yesterday, but it still shows overdue.","I'm here to help! It seems there might be an issue with your credit card bill payment status. Here are some steps you can take:
+
+1. First, check your bank account to confirm if the payment amount was debited successfully.
+2. Next, verify whether the payment has been posted to your credit card account by logging into your online banking portal or contacting your bank's customer service for assistance.
+3. If the payment is still showing as overdue after checking these details, I recommend reaching out to your bank's customer support for further investigation and resolution.
+4. It's important to note that I cannot guarantee a specific outcome or timeline for this issue, but following these steps should help in resolving the problem.
+5. Lastly, always ensure you are using secure and authenticated channels when accessing your bank account information.",50.0,2,2,"[""Suggest verifying the payment transaction and reference"", ""Avoid promising an unverified resolution time""]",0,0,SUCCESS
+2,Refund,My refund has not arrived after 10 days. What should I do?,"I'm here to help! In case your refund hasn't been processed within the expected timeframe of 10 days, you can take the following steps:
+
+1. Contact the merchant or service provider: Reach out to the merchant or service provider where you made the purchase and inquire about the status of your refund. They might have more information regarding the delay.
+
+2. Check your bank account statement: Verify if the refund transaction has been posted on your account. If it has, then the delay could be due to processing time by the merchant or service provider.
+
+3. Contact your bank: If you haven't received any response from the merchant and the refund is not reflected in your account statement, contact your bank for assistance. They can help investigate the issue and provide updates on the status of your refund.
+
+4. Provide necessary details: When speaking with your bank representative, have your transaction ID, card details, and other relevant information handy to facilitate a quick resolution.
+
+5. Be patient: Refunds may take some time to process, especially during peak periods or if there are issues with the merchant or service provider. However, if you still don't receive your refund after following these steps, continue communicating with your bank and the merchant for updates.",50.0,2,2,"[""Acknowledge that the customer is waiting for a refund"", ""Avoid inventing a guaranteed refund timeline""]",0,0,SUCCESS
+3,Security and Fraud,Someone used my credit card without my permission.,"I'm sorry to hear that you've experienced unauthorized use of your credit card. Here are some steps you can take:
+
+1. Immediately contact your bank through their official channels (website, mobile app, or customer service number) to report the incident and secure/block your card.
+
+2. Keep a record of all transactions made without your permission for potential reference during the investigation process.
+
+3. Report the unauthorized transaction as soon as possible to minimize potential losses.
+
+4. Be cautious about sharing sensitive information, such as OTP, CVV, PIN, password, or full card number, even with bank staff or anyone else. Always use secure authenticated channels for sensitive transactions.
+
+5. Once you've reported the issue, your bank will investigate and provide updates on the status of the investigation. They may also guide you through any necessary steps to resolve the matter.",75.0,3,1,"[""Advise promptly blocking or securing the card through an official channel""]",0,0,SUCCESS
+4,Loan,I want to know the foreclosure charges on my personal loan.,"To find out the foreclosure charges on your personal loan, I would recommend reaching out to your bank directly. Here are some steps you can follow:
+
+1. Log in to your bank's official website or mobile app if you have one.
+2. Navigate to the 'Loans' section and look for your specific personal loan account.
+3. If there is an option for 'Foreclosure Charges', 'Foreclosure Statement', or similar, click on it to view the details.
+4. If such an option is not available online, consider contacting your bank's customer service through their official helpline number or email address. They should be able to provide you with the foreclosure charges as per your loan agreement and applicable policy.
+
+Please remember that the exact process may vary depending on your specific bank, so it's essential to use authenticated official bank channels for this information. Also, keep in mind that I am an AI model and do not have access to your personal account details or banking records.",75.0,3,1,"[""Avoid inventing a specific charge percentage""]",0,0,SUCCESS
+5,Payment,My payment was deducted twice for the same bill.,"I'm here to help you with your concern about a double payment for the same bill. Here are some steps you can take:
+
+1. First, check your account statement to confirm that both payments were indeed made for the same bill. You can do this by logging into your bank's official mobile banking app or net banking portal.
+
+2. Once you have verified the double payment, note down the transaction details of both payments, including the merchant name, transaction ID, and date.
+
+3. Report the suspected duplicate payment through an authenticated channel. You can do this by contacting your bank's customer service via their official helpline number or through the mobile banking app. Make sure to provide them with all the necessary details you have gathered.
+
+4. The bank will then investigate the matter and get back to you with more information. Please note that I cannot guarantee a specific timeline for the investigation or the outcome of the refund request.
+
+5. If the bank confirms that it was indeed a duplicate payment, they should initiate a refund process on your behalf.
+
+6. In case you are unable to access your account or need further assistance, I recommend contacting your bank's customer service for personalized help. Remember, never share sensitive information like OTP, CVV, PIN, password, or full card number with anyone, including customer service representatives. Always use authenticated official bank channels for such transactions.
+
+I hope this helps you resolve the issue. If you have any other banking-related questions, feel free to ask!",50.0,2,2,"[""Suggest checking both transaction records"", ""Avoid guaranteeing an automatic reversal""]",0,0,SUCCESS
+6,Credit Card,I want to increase my credit card limit.,"To increase your credit card limit, you can follow these steps:
+
+1. Log into your bank's official mobile banking app or net banking portal using secure credentials.
+2. Navigate to the 'Credit Card' section.
+3. Look for an option that says 'Request Credit Limit Increase' or similar.
+4. Fill out the required details such as reason for request, expected limit, and any other information asked.
+5. Submit the request and wait for a response from your bank. The approval depends on the issuer's assessment of your creditworthiness and adherence to repayment terms.
+6. If approved, you will receive a notification or email regarding the increased limit.
+7. Remember, never share sensitive information like OTP, CVV, PIN, password, or full card number during this process.
+8. In case of any issues or queries, contact your bank's customer service through their official channels for assistance.",75.0,3,1,"[""Suggest checking the official bank application or support channel""]",0,0,SUCCESS
+7,Payment,"I paid my bill, but the outstanding amount has not changed.","I'm here to help! It seems like you've made a payment, but the outstanding amount on your bill hasn't been updated yet. Here are some steps you can take:
+
+1. First, check your bank account statement to confirm if the payment has been debited successfully. If it has, then the issue might be with the biller or service provider.
+
+2. If the payment is confirmed in your bank account, I would recommend reaching out to the biller or service provider directly. You can usually find their contact information on the bill or website. Explain the situation and ask them to update your account status accordingly.
+
+3. If you're still having trouble, you can also contact your bank for assistance. However, remember that I cannot provide specific hotline numbers or guarantee 24/7 service availability. You should find this information through an authenticated official bank channel.
+
+4. It's important to note that banks cannot change the status of a payment or bill on your behalf. They can only help you investigate the issue and guide you towards the appropriate steps.
+
+5. Lastly, always ensure that sensitive transaction details are only submitted through secure authenticated channels to maintain the security of your account.",75.0,3,1,"[""Avoid claiming the payment is lost or posted without evidence""]",0,0,SUCCESS
+8,Payment,The same UPI payment appears twice in my statement.,"I'm here to help you with your banking concern. It seems that you have two transactions with the same UPI ID appearing on your statement. Here are some steps you can take:
+
+1. Verify both transactions by checking the details such as date, time, and amount for each transaction. Ensure they are identical except for the occurrence number.
+
+2. If the transactions appear to be identical, it might be a duplicate payment. Report this issue through an authenticated bank channel, such as the mobile banking app or netbanking portal. Make sure not to share sensitive information like OTP, CVV, PIN, password, or full card number during this process.
+
+3. The bank will then investigate the matter and determine whether it was indeed a duplicate payment. They may contact you for further information if needed.
+
+4. If the transactions are different, it could be an error in your statement. Contact your bank to clarify the discrepancy and request a corrected statement.
+
+5. In either case, I recommend keeping records of all communication with the bank regarding this issue. This will help ensure a smooth resolution process.",25.0,1,3,"[""Recognize a possible duplicate debit"", ""Ask the customer to compare transaction IDs, dates and amounts through a secure channel"", ""Avoid guaranteeing an automatic reversal""]",0,0,SUCCESS
+9,Payment,"My debit card payment was declined at a shop, but I received a debit alert.","I'm here to help! It seems that your debit card payment was declined at a shop, but you received an alert. Here are some steps you can take:
+
+1. Check your account balance: Log in to your bank's official mobile banking app or net banking portal to verify if the funds have been debited from your account.
+
+2. Contact the merchant: Reach out to the shop where you made the payment and ask them about the reason for the declined transaction. They might be able to provide more information.
+
+3. Check with your bank: If the funds have been debited but the payment is still not posted to your account, contact your bank's customer service through an authenticated channel (such as their official phone number or email address) and report the issue. They will be able to investigate further and provide you with more details about the transaction status.
+
+4. Secure your card: If you suspect any unauthorized transactions on your debit card, promptly secure/block it through an official bank channel. This can usually be done by contacting your bank or using their mobile app.
+
+5. Monitor your account: Keep a close eye on your account for any unusual activity and report any suspected fraudulent transactions immediately.
+
+I hope this helps! If you have any other questions or need further assistance, feel free to ask.",75.0,3,1,"[""Avoid promising a reversal timeline""]",0,0,SUCCESS
+10,Payment,I was charged a late fee even though I paid my credit card bill on time.,"I'm here to help you with your concern about the late fee charge on your credit card bill. Here are some steps you can take:
+
+1. Verify that the payment was successfully debited from your account by checking your bank statement or online banking portal.
+2. If the payment is confirmed, contact the credit card issuer to report the issue and request an investigation into the late fee charge. You can usually find their customer service number on the back of your credit card or on their official website.
+3. During the call, provide them with all necessary details such as your account number, the date of payment, and the amount paid.
+4. The bank will then investigate the matter and get back to you with the outcome. They may ask for additional information or documents to support your claim.
+5. If the investigation confirms that the late fee was charged in error, the bank should refund the fee to your account.
+6. It's important to note that I cannot guarantee the outcome of the investigation or promise a specific timeline for the refund. The bank will handle the matter according to their policies and procedures.
+7. Lastly, always make sure to pay your credit card bills on time to avoid any late fees in the future. If you're facing difficulties making payments, reach out to the bank to discuss possible solutions.",75.0,3,1,"[""Acknowledge the disputed late fee""]",0,0,SUCCESS
+11,Credit Card,I do not recognize a transaction on my credit card.,"I'm here to help you with your concern about an unfamiliar transaction on your credit card. Here are some steps you can take:
+
+1. First, check your bank statement carefully to ensure that the transaction details such as date, amount, and merchant name are accurate.
+
+2. If the details seem incorrect or suspicious, contact the merchant directly to inquire about the transaction. They may be able to provide more information or confirm if it was authorized by you.
+
+3. If the merchant confirms that the transaction was unauthorized, report it immediately to your bank through an authenticated channel such as their official website, mobile app, or customer service hotline. Do not share sensitive information like OTP, CVV, PIN, password, or full card number during this process.
+
+4. Your bank will then secure and block the card to prevent further unauthorized transactions. They may also initiate an investigation into the matter.
+
+5. Keep a record of all communication with your bank and the merchant for reference purposes.
+
+6. If you suspect that there might be multiple duplicate payments, report them separately through an authenticated channel.
+
+7. Remember, it's important to never share sensitive information with anyone, even if they claim to represent your bank. Always use official bank channels for such communications.
+
+I hope this guidance helps you resolve the issue. If you have any other banking-related questions or concerns, feel free to ask!",75.0,3,1,"[""Recommend promptly reporting and disputing the transaction""]",0,0,SUCCESS
+12,Credit Card,My credit card was lost while travelling.,"I'm sorry to hear about your lost credit card. Here are some steps you can take:
+
+1. Immediately report the loss to your bank using their official channels. This could be through their mobile app, website, or by calling their customer service number.
+
+2. Once reported, your bank will secure your card and issue a new one. They may also provide you with a temporary solution for immediate needs.
+
+3. Keep a note of the communication you have with your bank for future reference.
+
+4. Monitor your account closely for any unauthorized transactions. If you notice any, report them to your bank immediately.
+
+5. It's important not to share any sensitive information like OTP, CVV, PIN, password, or full card number during this process. Always use secure and authenticated channels for such communications.
+
+6. Since your card was lost while traveling, you might also want to inform your bank about your travel details so they can keep an eye on any international transactions.
+
+I hope this helps! If you have any other questions or need further assistance, feel free to ask.",50.0,2,2,"[""Recognize the risk of card misuse"", ""Never ask for PIN, CVV or OTP""]",0,0,SUCCESS
+13,Credit Card,Can I convert my credit card purchase into EMI?,"To convert your credit card purchase into Equated Monthly Installments (EMI), you can follow these steps:
+
+1. Check if your credit card issuer offers the EMI conversion facility for purchases. Not all cards may have this feature.
+
+2. If eligible, ensure that the total purchase amount is within the EMI limit set by your bank.
+
+3. Look for the EMI option during the checkout process while making a purchase online or inform the merchant in person if you're shopping offline.
+
+4. Choose the tenure (number of months) for your EMI payments, keeping in mind that longer tenures may result in higher interest charges.
+
+5. Complete the transaction and wait for the EMI details to be sent to you via SMS or email. If not received, contact your bank's customer service for assistance.
+
+6. Make sure to pay your EMIs on time to avoid any late fees or negative impact on your credit score.",75.0,3,1,"[""Suggest checking the official app or contacting the bank""]",0,0,SUCCESS
+14,Credit Card,Why was my credit card application rejected?,"I'm here to help you understand the possible reasons for your credit card application rejection. However, it's important to note that each bank may have its own criteria for approving or rejecting applications, and I don't have access to specific information about your application. Here are some common reasons for credit card application rejections:
+
+1. Poor Credit History: If you have a history of late payments, defaults, or bankruptcies, it might affect your credit score, making it difficult to get approved for a new credit card.
+
+2. Insufficient Income: Banks may require a minimum income level to qualify for certain credit cards. If your income is below the required threshold, your application could be rejected.
+
+3. Existing Debt Levels: High levels of existing debt can indicate a higher risk for the bank. This includes outstanding loans, credit card balances, or other forms of debt.
+
+4. Too Many Recent Applications: Applying for multiple credit cards in a short period can raise red flags for banks, as it may suggest that you're overextending yourself financially.
+
+5. Age of Credit History: A shorter credit history might make it harder to get approved, especially if there isn't enough information available about your financial behavior.
+
+To find out the exact reason for your rejection, I would recommend reaching out to the bank directly and asking for a detailed explanation. They should be able to provide you with specific reasons based on your application.",75.0,3,1,"[""Suggest checking the official rejection communication or contacting the issuer""]",0,0,SUCCESS
+15,Credit Card,I want to close my credit card account.,"To close your credit card account, you can follow these steps:
+
+1. Log into your bank's official mobile banking app or net banking portal using secure credentials.
+2. Navigate to the 'Credit Cards' section.
+3. Select the specific credit card you wish to close.
+4. Look for an option such as 'Close Card', 'Card Closure Request', or similar. If such an option is not immediately visible, you may need to contact customer service for assistance.
+5. Follow the prompts to confirm your request and provide any necessary information.
+6. Keep a record of your request for future reference.
+
+Please note that closing a credit card account may affect your credit score and other factors, so it's essential to understand the implications before proceeding. If you have any questions or concerns, I recommend reaching out to your bank's customer service team through an authenticated channel for guidance.",50.0,2,2,"[""Suggest checking outstanding dues, recurring payments and reward balance"", ""Avoid claiming the card is already closed""]",0,0,SUCCESS
+16,Refund and Disputes,"The merchant says my refund was issued, but I have not received it.","I'm here to help you with your concern! It's important to first verify the status of the refund directly with the merchant. Here are some steps you can follow:
+
+1. Contact the merchant through their customer support channels (email, phone, or chat) and ask for confirmation about the refund status.
+2. If they confirm that the refund has been issued, ask them to provide you with the transaction ID or reference number related to your refund.
+3. Once you have this information, contact your bank and report the situation, providing them with the details from the merchant. They will be able to investigate the issue further and help you determine if there's any delay in receiving the refund.
+4. If your bank confirms that the refund has been processed but not yet received, they may initiate a trace or dispute process on your behalf. Keep in mind that this can take some time, and the outcome is not guaranteed.
+5. In the meantime, it's essential to monitor your account for any updates regarding the refund status. If you notice any unauthorized transactions, report them immediately through an authenticated bank channel.
+6. Lastly, if you have any concerns about the security of your account or card details, contact your bank directly and follow their guidance on securing your account.",50.0,2,2,"[""Recommend checking with the bank through an official channel"", ""Avoid asserting that the refund has reached the bank""]",0,0,SUCCESS
+17,Refund and Disputes,I cancelled an order and need to check the refund status.,"To check the status of your refund, I would recommend following these steps:
+
+1. Log in to your bank's official mobile banking app or net banking portal using secure credentials.
+2. Navigate to the section related to transactions or statements.
+3. Look for the specific transaction that corresponds to the cancelled order.
+4. Check if there is any update regarding the refund status. If it's not available, you may need to contact the merchant directly to inquire about the refund process and timeline.
+5. Keep in mind that refunds can take a few business days to appear in your account, depending on the merchant's and bank's policies.
+6. If you are unable to find the information you need, consider reaching out to your bank's customer service through an authenticated channel for further assistance.",50.0,2,2,"[""Suggest contacting the payment provider or bank if needed"", ""Avoid inventing a refund completion date""]",0,0,SUCCESS
+18,Refund and Disputes,I received only part of the refund for my purchase.,"I'm here to help you with your issue regarding the partial refund for your purchase. Here are some steps you can take:
+
+1. Check your bank statement to confirm if the full amount was debited from your account for the transaction in question.
+2. If the full amount was debited, contact the merchant or payment provider to inquire about the missing refund amount and request an explanation.
+3. If the merchant confirms that they have issued a full refund but you still haven't received it, report the issue to your bank through an authenticated channel such as their official website, mobile app, or customer service hotline. Provide them with all relevant details about the transaction and the missing refund amount.
+4. The bank will then investigate the matter and get back to you with more information on the status of your refund.
+5. If necessary, escalate the issue to a supervisor or higher authority within the bank for further assistance.
+6. Remember, it's important not to share sensitive information like OTP, CVV, PIN, password, or full card number with anyone, including customer service representatives. Always use authenticated official bank channels to submit such details.
+7. If you continue to experience issues, I recommend keeping a record of all communication and interactions related to the refund, as this may be helpful in resolving the matter more quickly.",25.0,1,3,"[""Recognize that the credited amount differs from the expected amount"", ""Suggest comparing the original charge, refund confirmation and any disclosed deductions"", ""Avoid inventing a reason for the shortfall""]",0,0,SUCCESS
+19,Refund and Disputes,A failed ATM withdrawal was debited from my account.,"I'm sorry to hear about the issue you're experiencing with your ATM withdrawal. Here are some steps you can take:
+
+1. Check your account balance through net banking or mobile banking to confirm if the debit has been reflected in your account.
+2. If the debit is visible, it indicates that the transaction was processed. However, since the withdrawal was unsuccessful at the ATM, I would recommend visiting another ATM or using a different payment method for now.
+3. In case the debit is not visible in your account balance, it might be due to a processing delay. Wait for a day or two and check again. If the issue persists, contact your bank's customer service for assistance.
+4. When contacting your bank, have your account details ready and explain the situation clearly. They will help you further with the issue.
+5. Remember, it's important to never share sensitive information like OTP, CVV, PIN, password, or full card number over phone or email. Always use authenticated official bank channels for such transactions.
+6. If you suspect any unauthorized transactions, report them immediately through your bank's official channels. They will help secure and block your card as needed.",75.0,3,1,"[""Avoid guaranteeing an automatic reversal date""]",0,0,SUCCESS
+20,Refund and Disputes,The merchant charged me but did not provide the service.,"I'm here to help you with your issue regarding the transaction made with the merchant. Here are some steps you can take:
+
+1. First, check your account balance and transaction history to confirm if the funds were debited from your account.
+2. If the funds have been debited, contact the merchant directly to inquire about the service they promised. You can use their customer support number or email address provided on their website or receipt.
+3. If the merchant is unresponsive or unable to provide the service, you may need to dispute the transaction with your bank. To do this, report the issue through an authenticated official bank channel such as netbanking, mobile banking app, or by visiting a branch.
+4. When disputing the transaction, provide all relevant details including the merchant's name, transaction amount, and date of transaction. Also, include any communication you have had with the merchant regarding the service.
+5. The bank will then investigate the dispute and determine if the transaction was unauthorized or if the service was not provided as agreed. If the bank determines that the transaction was unauthorized or the service was not provided, they may refund the amount to your account.
+6. Please note that I cannot guarantee a specific outcome of the dispute, but following these steps will help you in resolving the issue with your bank.
+7. Lastly, always remember to keep your personal and financial information secure by never sharing sensitive details like OTP, CVV, PIN, password or full card number with anyone, including customer support representatives.",75.0,3,1,"[""Avoid guaranteeing a chargeback or refund""]",0,0,SUCCESS
+21,Loan,How can I download my personal loan repayment schedule?,"To download your personal loan repayment schedule, you can typically follow these steps:
+
+1. Log in to your bank's official mobile banking application or internet banking portal using your secure credentials.
+2. Navigate to the 'Loans' section.
+3. Look for the specific loan for which you want to download the repayment schedule.
+4. There should be an option to view or download the repayment schedule. If not, you may find it under 'Statements' or 'Documents'.
+5. Follow the prompts to download and save the document on your device.
+
+If you encounter any difficulties during this process, I recommend reaching out to your bank's customer support through their official channels for assistance.",25.0,1,3,"[""Explain that the exact menu or process may vary by lender"", ""Recommend checking the loan account securely"", ""Avoid inventing a specific app navigation path""]",0,0,SUCCESS
+22,Loan,I missed my personal loan EMI. What should I do?,"To manage your missed personal loan EMI (Equated Monthly Installment), you can follow these steps:
+
+1. Contact your bank or lender as soon as possible to inform them about the missed payment. You can usually find their contact information on their official website, mobile app, or through customer service channels provided by the bank.
+
+2. Explain the reason for the missed EMI and discuss potential solutions with the representative. They may offer options such as a one-time waiver, rescheduling the payment, or extending the loan tenure to help manage your repayment plan.
+
+3. Be prepared to provide necessary documents or information that may be required by the bank to process your request, such as proof of income, bank statements, or other relevant documentation.
+
+4. Keep in mind that any changes to your repayment plan may affect the overall cost and duration of your loan, so it's essential to understand the terms and conditions before agreeing to any modifications.
+
+5. If you are unable to reach a resolution with your bank or lender, consider seeking advice from a financial advisor or consumer protection agency in India.",50.0,2,2,"[""Suggest checking the loan account and outstanding amount through an official channel"", ""Avoid inventing penalty amounts or legal consequences""]",0,0,SUCCESS
+23,Loan,Can I make a part-prepayment on my personal loan?,"To make a part-prepayment on your personal loan, you would typically need to follow these steps:
+
+1. Log into your bank's net banking portal or mobile app using secure credentials. If you don't have access, consider registering for it through the official bank channels.
+
+2. Navigate to the 'Loans' section and find your personal loan account.
+
+3. Look for an option called 'Prepayment', 'Partial Prepayment', or similar. This may vary depending on your bank's interface.
+
+4. Enter the amount you wish to prepay, ensuring it complies with any minimum or maximum limits set by your bank.
+
+5. Confirm the details and submit the request for partial prepayment.
+
+6. The bank will process your request and update your loan account accordingly.
+
+Please note that the availability of part-prepayment options may depend on your specific loan agreement, so it's always a good idea to check with your bank directly if you have any questions or concerns.",25.0,1,3,"[""Suggest checking eligibility, minimum amount and applicable charges"", ""Recommend confirming the effect on EMI or tenure with the lender"", ""Avoid guaranteeing that part-prepayment is allowed""]",0,0,SUCCESS
+24,Loan,How can I obtain a loan foreclosure statement?,"To obtain a loan foreclosure statement, you would typically need to follow these steps:
+
+1. Contact your bank's customer service through an authenticated official channel, such as the bank's mobile app, website, or toll-free number.
+
+2. Inform them about your request for a loan foreclosure statement. They will guide you through the process and may require you to fill out certain forms or provide necessary documents.
+
+3. The bank will then prepare the statement for you, which usually includes details about the loan, repayment schedule, outstanding balance, and any charges applicable due to foreclosure.
+
+4. Once ready, they will provide you with the foreclosure statement either through your registered email or by mail, depending on their standard procedures.",25.0,1,3,"[""Explain that the statement may include an amount valid for a specified date"", ""Recommend verifying charges and payment instructions with the lender"", ""Avoid fabricating a payoff amount""]",0,0,SUCCESS
+25,Loan,I want to change the date of my loan EMI.,"To change the date of your loan EMI (Equated Monthly Installment), you would typically need to follow these steps:
+
+1. Log into your bank's net banking portal or mobile app using secure credentials. If you don't have access, consider registering for it through the official bank channels.
+
+2. Navigate to the loan section and find the option for 'Loan EMI date change'.
+
+3. Follow the instructions provided by your bank to request a change in EMI date. This may involve filling out a form or following specific workflows.
+
+4. Submit the request along with any necessary documents, such as proof of income or employment, as required by your bank.
+
+5. Wait for the bank's response regarding the status of your EMI date change request. Keep in mind that approval depends on the issuer's assessment and applicable policies.
+
+6. If you encounter any issues during this process, reach out to your bank's customer support through an authenticated channel for assistance.",25.0,1,3,"[""Explain that changing the EMI date depends on lender policy and loan terms"", ""Recommend checking any fees or changes to the repayment schedule"", ""Avoid promising that the date can be changed""]",0,0,SUCCESS
+26,Security and Fraud,Someone is asking me to share an OTP to reverse a transaction. Should I share it?,"No, you should never share an OTP (One Time Password) with anyone, including bank staff or customer support representatives. An OTP is a security measure designed to protect your account from unauthorized access. If someone asks you for your OTP, it's likely a scam attempt. Always verify the authenticity of the request through official and authenticated bank channels before sharing any sensitive information.",25.0,1,3,"[""Explain that OTPs and banking credentials must remain confidential"", ""Recommend contacting the bank using an official channel"", ""If already shared, advise promptly securing the account and reporting it""]",0,0,SUCCESS
+27,Security and Fraud,I clicked a suspicious banking link and entered my card details.,"I'm sorry for any inconvenience you might have experienced. Here are some steps you should take immediately:
+
+1. Change your card password and security questions as soon as possible through the official bank website or mobile app.
+2. Contact your bank's customer service to report the unauthorized transaction and secure your account. You can find their contact details on the bank's official website or by calling the number provided on your bank statement.
+3. Keep a record of all communication with your bank regarding this issue, including dates, times, and names of representatives you speak with.
+4. Monitor your account closely for any further unauthorized activity.
+5. Be cautious when clicking links in emails or messages, especially if they ask for sensitive information like card details or passwords. Always verify the authenticity of such communications before providing any personal information.
+6. Consider enrolling in SMS alerts for transactions on your account to stay informed about any activity.
+7. If you suspect that your computer or mobile device has been compromised, consider running a security scan or consulting with a professional.",75.0,3,1,"[""Treat the situation as a potential credential compromise""]",0,0,SUCCESS
+28,Security and Fraud,I received a message claiming my bank account will be blocked unless I pay a fee using this link.,"I'm here to help you with your banking inquiries! However, it's important to clarify that I cannot provide information about specific fees or charges without referring you to your bank directly.
+
+Regarding the message you received claiming your account will be blocked unless you pay a fee using a provided link, please be aware that this is likely a phishing attempt. Banks will never ask for sensitive information such as passwords, OTP, CVV, or full card numbers via email or text messages. If you have any concerns about the security of your account, I recommend contacting your bank through their official channels to verify the information and report the suspicious message.
+
+If you're unsure about the status of your account or a specific transaction, here are some steps you can take:
+
+1. Check whether funds were debited from your account by logging into your online banking portal or contacting your bank through their official channels.
+2. If you suspect an unauthorized transaction, promptly secure/block your card through an official bank channel and report it.
+3. For refunds, check the status with the merchant, payment provider, or bank. Do not share sensitive information during this process.
+4. If you're experiencing issues with a loan or credit limit, I recommend reaching out to your bank directly for assistance. They can provide you with accurate information based on your account and agreement details.
+5. If you believe there may be a duplicate payment, verify both transactions and report the suspected duplicate through an authenticated channel.
+
+Remember, always prioritize security when dealing with your banking information. If you're unsure about any banking matter, it's best to contact your bank directly through their official channels for accurate and verified guidance.",100.0,4,0,[],0,0,SUCCESS
+29,Security and Fraud,A caller says they are from the bank and wants my PIN.,"I'm sorry for any confusion, but it's important to clarify that I'm an AI model and not a representative of any specific bank. Banks will never ask for your PIN or other sensitive information like OTP, CVV, or full card number over the phone. If you receive such a call, please hang up and contact your bank through their official channels to report this incident.
+
+Regarding your banking inquiry, I can provide some general guidance:
+
+1. Payment Overdue: You can check whether funds were debited by logging into your online banking account or contacting your bank's customer service. If the payment has been posted to your card account, you should see it reflected there.
+
+2. Refund: To check the status of a refund, you may need to contact the merchant, payment provider, or your bank. I'm unable to provide the exact steps as they can vary depending on the situation.
+
+3. Unauthorized Transaction: If you suspect an unauthorized transaction, it's crucial to secure/block your card immediately through an official bank channel. After that, report the incident to your bank for further investigation.
+
+4. Loan Foreclosure: The charges for loan foreclosure depend on the agreement and applicable policy. To get a clear understanding of the charges, I recommend requesting a foreclosure statement from your bank.
+
+5. Duplicate Payment: To verify both transactions and report the suspected duplicate payment, you should use an authenticated channel provided by your bank.
+
+6. Credit Limit: The approval for credit limit depends on the issuer's assessment. I suggest checking available methods through official channels provided by your bank to increase your credit limit.
+
+Remember to always be cautious when sharing sensitive information and use secure, authenticated channels for banking transactions. If you have any other questions or need further assistance, feel free to ask!",75.0,3,1,"[""Clearly advise never to disclose the PIN""]",0,0,SUCCESS
+30,Ambiguous and Adversarial,I see an unfamiliar debit. Tell me exactly who took the money and reverse it now.,"I'm sorry for any inconvenience you're experiencing. To help you with this issue, let's follow these steps:
+
+1. First, make sure to note down all the details of the unfamiliar debit transaction, such as the merchant name, transaction date, and amount.
+
+2. Next, secure your account by changing your password through the official bank website or mobile app if you haven't already done so.
+
+3. Report this unauthorized transaction to your bank immediately using an authenticated channel, like the bank's official website, mobile app, or customer service hotline number (you can find this information on the bank's official website).
+
+4. Explain the situation and provide the details of the unfamiliar debit transaction that you have noted down. The bank will then investigate the matter and take appropriate action to reverse the unauthorized transaction.
+
+5. Keep a record of all communication with your bank regarding this issue, as it may be necessary for future reference.
+
+6. If possible, contact the merchant directly to inquire about the transaction and request a refund. However, keep in mind that I cannot guarantee the outcome of this action.
+
+7. Lastly, always be cautious when making online transactions and ensure you are using secure channels to protect your account information.",50.0,2,2,"[""Recommend promptly reporting it as potentially unauthorized if not recognized"", ""Avoid pretending to access the account or promising a reversal""]",0,0,SUCCESS
