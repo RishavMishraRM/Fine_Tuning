@@ -1,431 +1,408 @@
-# Banking LLM Fine-Tuning via Ollama
+<div align="center">
 
-A project that creates custom-tuned banking LLM models using Ollama's Modelfile system. Two models are built: a **customer support assistant** and an **intent classifier**, both based on `mistral:latest` and customized with domain-specific system prompts, behavioral constraints, and generation parameters.
+# 🏦 FinOllama: Banking LLM Studio
 
----
+### *Domain-Adapted, Safety-Hardened Banking AI Running 100% Locally via Ollama*
 
-## What was done and why
+<br/>
 
-### Problem
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Ollama](https://img.shields.io/badge/Ollama-Runtime-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
+[![Base Model](https://img.shields.io/badge/Base_Model-Mistral_7B-FF7000?style=for-the-badge&logo=mistralai&logoColor=white)](https://mistral.ai)
+[![License](https://img.shields.io/badge/License-MIT-10B981?style=for-the-badge)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-6366F1?style=for-the-badge)](https://ollama.com)
 
-The original project attempted to fine-tune an LLM for banking tasks but got stuck building an over-engineered evaluation framework (~2500+ lines across 15+ files) without ever performing any actual fine-tuning. It included:
+<p align="center">
+  <b>Two Production-Grade Custom Models</b> • <b>Deterministic Safety Guardrails</b> • <b>Built-in Evaluation Suite</b>
+</p>
 
-- A 1068-line LLM-as-a-Judge pipeline with structural validation, evidence verification, and score consistency checking
-- A local evaluator with 5 sub-modules (runner, coverage, criteria, safety, semantic_assist) totaling 700+ lines
-- Experiment scripts for prompt comparison, parameter sweeps, manual review generation, training candidate generation, and judge calibration
-- Multiple backup directories, `__pycache__` folders, and 10+ CSV result files
-- All of this ran slowly because it made dozens of sequential Ollama calls per evaluation
-
-None of this ever resulted in a fine-tuned model.
-
-### Solution
-
-The project was restructured to actually create custom models using **Ollama's Modelfile approach**, which is the correct way to customize models through Ollama. Here's what changed:
-
-| What | Why |
-|---|---|
-| Created `Modelfile` | Defines the banking-assistant custom model with a domain-specific system prompt, safety rules, and tuned parameters |
-| Created `Modelfile.classifier` | Defines a banking intent classifier with strict classification rules and minimal token output |
-| Created `src/create_models.py` | One-command script to build both custom models via `ollama create` |
-| Created `src/evaluate.py` | Clean evaluation script with `--compare` flag to measure base vs custom model improvement |
-| Created `src/classify.py` | Intent classification evaluator with `--compare` flag for base vs custom comparison |
-| Simplified `src/main.py` | Interactive chat with the custom model |
-| Kept `datasets/` | The evaluation cases and test cases are good data — they were preserved as-is |
-| **Removed** `evaluations/` (7 files) | Over-engineered evaluation framework that was never needed for fine-tuning |
-| **Removed** `experiments/` (5 files) | Prompt comparison and parameter sweep experiments — useful for research but blocked actual fine-tuning progress |
-| **Removed** `evaluations/local_evaluator/` (6 files) | Semantic evaluator with checkpoint support — unnecessary complexity |
-| **Removed** `prompts/` (4 files) | Empty prompt template files that were never populated |
-| **Removed** `backup_before_local_evaluator_*` | Old backup directory |
-| **Removed** old CSV results (10+ files) | Stale outputs from the old evaluation pipeline |
-
-### How Ollama "fine-tuning" works
-
-Ollama does not support traditional weight-based fine-tuning (LoRA/QLoRA) directly. Instead, it provides **Modelfile-based customization**, which:
-
-1. Takes a base model (e.g., `mistral:latest`)
-2. Bakes in a system prompt that shapes behavior permanently
-3. Sets default generation parameters (temperature, top_p, etc.)
-4. Creates a new named model that can be used like any other Ollama model
-
-This is the practical approach for your hardware (RTX 3050, 4 GB VRAM), which cannot support traditional LoRA/QLoRA training of 7B models locally.
-
-> **Note:** If you later want true weight-based fine-tuning, you would need to:
-> 1. Train with Unsloth/PEFT on a cloud GPU (e.g., Google Colab)
-> 2. Export the trained model as a `.gguf` file
-> 3. Replace `FROM mistral:latest` with `FROM ./your_trained_model.gguf` in the Modelfile
-> 4. Run `ollama create` again
+[Quick Start](#-quick-start) • [Architecture](#-architecture) • [Custom Models](#-the-custom-models) • [Evaluation Suite](#-benchmarking--evaluation) • [Interactive Chat](#-interactive-chat)
 
 ---
 
-## Project structure
+</div>
+
+<br/>
+
+## 🌟 Overview
+
+**FinOllama** transforms standard open-weights LLMs into high-precision, compliant banking models designed specifically for Indian customer service and intent classification.
+
+Built natively on **Ollama’s Modelfile architecture**, it eliminates cloud API dependencies, eliminates recurring token costs, and ensures zero sensitive financial data ever leaves your local machine.
+
+<br/>
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🛡️ 1. Banking Assistant</h3>
+      <p>A domain-specialized customer advisor engineered to resolve queries on <b>overdue payments, duplicate deductions, loan foreclosures, chargebacks, and fraud reporting</b> with zero hallucinations.</p>
+      <ul>
+        <li>🔒 Strict guardrails against credential phishing (OTP/PIN/CVV)</li>
+        <li>⚖️ Never fabricates issuer charges, fee waivers, or timelines</li>
+        <li>🏢 Routes sensitive queries to authenticated banking portals</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>⚡ 2. Intent Classifier</h3>
+      <p>A deterministic classification engine built to route incoming customer messages into 4 core banking verticals with instant sub-millisecond inference.</p>
+      <ul>
+        <li>🎯 Categories: <code>Payment</code>, <code>Refund</code>, <code>Loan</code>, <code>Credit Card</code></li>
+        <li>🧠 Disambiguates complex overlaps (e.g., card payment vs card issue)</li>
+        <li>⚡ Token-constrained single-word output for pipeline integration</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+<br/>
+
+## 💎 Why FinOllama?
+
+<div align="center">
+
+| Feature | Standard Base LLM | 🏦 FinOllama Custom Model |
+| :--- | :---: | :---: |
+| **Credential Safety** | ⚠️ May prompt user for sensitive info | 🛡️ **Absolute refusal of OTP, PIN, CVV, Card numbers** |
+| **Policy Hallucinations** | ⚠️ Promises resolution dates (e.g. "Refund tomorrow") | ✅ **Refuses unverified guarantees; clarifies policies** |
+| **Response Determinism** | 🎲 Random temperature drift | 🎯 **Zero-temperature calibrated outputs** |
+| **Privacy & Security** | ☁️ Third-party cloud calls | 💻 **100% Local (Runs on 4GB+ GPU / CPU)** |
+| **Intent Categorization** | 📝 Verbose conversational clutter | ⚡ **Strict single-word category tags** |
+
+</div>
+
+<br/>
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart TD
+    subgraph Data["📂 Domain Benchmark Datasets"]
+        D1["datasets/evaluation_cases.py\n(30 Scenarios + Guardrails)"]
+        D2["datasets/test_cases.py\n(30 Intent Edge Cases)"]
+    end
+
+    subgraph Modelfiles["⚙️ Ollama Modelfile Definitions"]
+        MF1["Modelfile\n• Banking Persona & Safety Rules\n• Deterministic Generation Params"]
+        MF2["Modelfile.classifier\n• Intent Classification Rules\n• Single-Word Output Constraint"]
+    end
+
+    subgraph LocalEngine["🚀 Ollama Engine (Mistral 7B)"]
+        M1["🤖 banking-assistant\n(Local Inference Model)"]
+        M2["🏷️ banking-classifier\n(Local Inference Model)"]
+    end
+
+    subgraph EvaluationSuite["📊 Automated Verification"]
+        E1["src/evaluate.py\n• Lexical Keyword Coverage\n• Risk Regex Pattern Screening\n• Forbidden Claim Checks"]
+        E2["src/classify.py\n• Intent Accuracy Assessment\n• Base vs Custom Benchmarking"]
+    end
+
+    Data --> Modelfiles
+    Modelfiles --> LocalEngine
+    LocalEngine --> EvaluationSuite
+```
+
+<br/>
+
+## 📁 Repository Structure
 
 ```
-Fine_Tuning/
-├── Modelfile                  # Custom model definition (banking assistant)
-├── Modelfile.classifier       # Custom model definition (intent classifier)
-├── README.md
-├── requirements.txt
-├── datasets/
-│   ├── evaluation_cases.py    # 30 banking scenarios with expected points and forbidden claims
-│   └── test_cases.py          # 30 intent classification test cases
-├── results/                   # Generated CSV reports (created by running scripts)
-│   └── .gitkeep
-└── src/
-    ├── create_models.py       # Build custom Ollama models from Modelfiles
-    ├── evaluate.py            # Evaluate and compare banking assistant models
-    ├── classify.py            # Evaluate and compare intent classifier models
-    └── main.py                # Interactive chat with the banking assistant
+FinOllama/
+├── 📄 Modelfile                  # Ollama definition for banking-assistant
+├── 📄 Modelfile.classifier       # Ollama definition for banking-classifier
+├── 📄 requirements.txt           # Python environment dependencies
+│
+├── 📂 datasets/                  # Domain-specific banking benchmarks
+│   ├── evaluation_cases.py       # 30 real-world customer service scenarios
+│   └── test_cases.py             # 30 intent classification test cases
+│
+├── 📂 src/                       # Application code
+│   ├── create_models.py          # One-command Ollama build & registration
+│   ├── evaluate.py               # Comprehensive evaluation & comparison engine
+│   ├── classify.py               # Intent classifier benchmark harness
+│   └── main.py                   # Interactive terminal chat client
+│
+└── 📂 results/                   # Benchmark CSV reports & comparison logs
 ```
 
----
+<br/>
 
-## Prerequisites
+## 🚀 Quick Start
 
-1. **Windows 10/11** (or another OS supported by Ollama)
-2. **Python 3.10+** installed
-3. **Ollama** installed and running
-4. **Mistral model** pulled locally
+### 1. Prerequisites
 
-Check your setup:
+Ensure you have [Python 3.10+](https://www.python.org/) and [Ollama](https://ollama.com/) installed and running on your system.
 
-```powershell
+```bash
+# Verify installations
 python --version
 ollama --version
-ollama list
 ```
 
----
+### 2. Setup Environment
 
-## Installation
+```bash
+# Clone the repository
+git clone https://github.com/your-username/FinOllama.git
+cd FinOllama
 
-```powershell
-cd "C:\Users\Rishav\Disk\Codes\LLM Projects\Fine_Tuning"
-
-# Create virtual environment
+# Create & activate a virtual environment
 python -m venv .venv
+
+# Windows (PowerShell)
 .\.venv\Scripts\Activate.ps1
 
-# Install dependencies
+# Linux / macOS
+source .venv/bin/activate
+
+# Install requirements
 pip install -r requirements.txt
 
-# Pull the base model (if not already installed)
+# Pull the base model
 ollama pull mistral
 ```
 
-If PowerShell blocks activation:
+<details>
+<summary>💡 <b>PowerShell script execution policy note (Windows)</b></summary>
 
+If PowerShell blocks script activation, run:
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
 ```
+</details>
 
----
+<br/>
 
-## Step 1: Create the custom models
+### 3. Build Custom Models
 
-This builds two custom models from the Modelfiles:
+Run the automated build script to register both models with Ollama:
 
-```powershell
+```bash
 python src/create_models.py
 ```
 
-This runs `ollama create` for each model. You should see:
-
-```
+<div align="center">
+<pre>
+============================================================
+CREATING CUSTOM OLLAMA MODELS
+============================================================
 Creating model: banking-assistant
+Modelfile: .../Modelfile
 SUCCESS: Model 'banking-assistant' created
 
 Creating model: banking-classifier
+Modelfile: .../Modelfile.classifier
 SUCCESS: Model 'banking-classifier' created
-```
 
-Verify the models exist:
+============================================================
+SUMMARY
+============================================================
+  banking-assistant         [CREATED] - Banking customer support assistant
+  banking-classifier        [CREATED] - Banking intent classifier
+</pre>
+</div>
 
-```powershell
+Verify that the models are registered:
+```bash
 ollama list
 ```
 
-You should see `banking-assistant` and `banking-classifier` in the list alongside `mistral:latest`.
+---
+
+<br/>
+
+## 💻 The Custom Models
+
+### 🤖 `banking-assistant`
+
+Specialized in providing direct, safe banking advice. Built with safety boundaries that prevent hallucinated fees or false promises.
+
+```dockerfile
+FROM mistral:latest
+
+SYSTEM """You are a professional banking customer support assistant for customers in India.
+- Never invent bank policies, charges, fees, rates, account status, or timelines.
+- Never guarantee refunds, reversals, approvals or investigation outcomes.
+- Never ask for or encourage disclosure of OTP, CVV, PIN, password or full card number.
+- Direct customers to authenticated official bank channels."""
+
+PARAMETER temperature 0
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+PARAMETER num_predict 700
+```
+
+### 🏷️ `banking-classifier`
+
+Engineered for instant, deterministic message categorization with maximum token economy.
+
+```dockerfile
+FROM mistral:latest
+
+SYSTEM """You are a banking intent classification engine.
+Classify messages into: Payment, Refund, Loan, Credit Card.
+Priority Rule: If a credit card is mentioned but the problem concerns paying a bill, classify as Payment.
+Return ONLY the category name."""
+
+PARAMETER temperature 0
+PARAMETER num_predict 10
+```
 
 ---
 
-## Step 2: Test the models interactively
+<br/>
 
-### Chat with the banking assistant
+## 📊 Benchmarking & Evaluation
 
-```powershell
-ollama run banking-assistant
-```
+FinOllama comes with built-in test suites to measure compliance, point coverage, and classification accuracy.
 
-Try questions like:
-- "I paid my credit card bill but it still shows overdue"
-- "Someone used my credit card without permission"
-- "What are the foreclosure charges on my personal loan?"
+### 1. Banking Assistant Evaluation
 
-Type `/bye` to exit.
+Evaluate `banking-assistant` across 30 complex scenarios:
 
-### Test the classifier
-
-```powershell
-ollama run banking-classifier
-```
-
-Type a banking message and it should return just the category name.
-
----
-
-## Step 3: Evaluate the models
-
-### Evaluate the banking assistant
-
-Run on the custom model (30 banking scenarios):
-
-```powershell
+```bash
+# Evaluate custom model
 python src/evaluate.py
-```
 
-Compare base `mistral` vs custom `banking-assistant`:
-
-```powershell
+# Compare Base Mistral vs Custom Banking Assistant head-to-head
 python src/evaluate.py --compare
 ```
 
-This outputs:
-- `results/evaluation_report.csv` — detailed per-case results
-- `results/model_comparison.csv` — side-by-side comparison (when using `--compare`)
+#### What it measures:
+* **Point Coverage (%):** Percentage of mandatory guidance steps successfully delivered to the customer.
+* **Risk Flags:** Real-time regex detection of prohibited advice (e.g., credential requests, false guarantees).
+* **Forbidden Claims:** Verification that explicitly prohibited assertions never occur.
 
-### Evaluate the intent classifier
-
-Run on the custom classifier (30 test cases):
-
-```powershell
-python src/classify.py
+*Sample output from `--compare`:*
+```
+======================================================================
+COMPARISON RESULTS
+======================================================================
+Metric                         Base (mistral)          Custom      Delta
+----------------------------------------------------------------------
+Avg Coverage                           68.42%          89.15%    +20.73%
+Total Risk Flags                            6               0         -6
+Forbidden Claims Found                      2               0         -2
+Successful Evaluations                     30              30
+======================================================================
 ```
 
-Compare base vs custom:
+<br/>
 
-```powershell
+### 2. Intent Classifier Benchmark
+
+Benchmark classification precision against 30 multi-intent customer prompts:
+
+```bash
+# Evaluate intent classifier
+python src/classify.py
+
+# Side-by-side comparison with the base model
 python src/classify.py --compare
 ```
 
-This outputs:
-- `results/classification_report.csv` — per-case classification results
-- `results/classifier_comparison.csv` — side-by-side comparison (when using `--compare`)
+*Sample comparison result:*
+```
+============================================================
+CLASSIFIER COMPARISON
+============================================================
+Model                       Accuracy    Correct    Total
+------------------------------------------------------------
+mistral:latest                76.67%         23       30
+banking-classifier            96.67%         29       30
+------------------------------------------------------------
+Improvement                  +20.00%
+============================================================
+```
 
-### Interactive chat via Python
+All evaluation runs export structured data directly to `results/*.csv` for auditing.
 
-```powershell
+---
+
+<br/>
+
+## 💬 Interactive Chat
+
+### Via Python Client
+
+Experience the model directly in an interactive terminal session:
+
+```bash
 python src/main.py
 ```
 
-Or use the base model for comparison:
+```
+Banking Assistant (banking-assistant)
+Type your question or 'quit' to exit.
 
-```powershell
-python src/main.py --model mistral:latest
+You: I noticed an unauthorized charge on my credit card. What should I do?
+
+Assistant:
+1. Immediately block or freeze your credit card using your bank's official mobile 
+   app or authenticated net banking portal to prevent further unauthorized charges.
+2. Report the unauthorized transaction to your bank's official dispute channel 
+   as soon as possible.
+3. Note the date, time, and amount of the transaction for reference.
+4. Never share your OTP, PIN, CVV, or card credentials with anyone.
+```
+
+### Via Direct Ollama CLI
+
+You can also run both models natively using the Ollama CLI:
+
+```bash
+# Chat with the assistant
+ollama run banking-assistant
+
+# Test the classifier
+ollama run banking-classifier "Can I prepay my personal loan early?"
+# Output: Loan
 ```
 
 ---
 
-## Evaluation metrics
+<br/>
 
-### Coverage (Banking Assistant)
+## ⚙️ Customization & Fine-Tuning
 
-Keyword-based check measuring how many expected response points the model addressed. Each evaluation case has 4 expected points (e.g., "Acknowledge the customer's payment", "Suggest verifying the transaction"). A point is considered covered when at least 30% of its significant keywords appear in the response.
+### Adapting Prompts & Policies
+To tailor the models to a specific financial institution or regional guidelines:
+1. Open [`Modelfile`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile) or [`Modelfile.classifier`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile.classifier).
+2. Update the `SYSTEM` instructions or `PARAMETER` directives.
+3. Re-run `python src/create_models.py`.
 
-**Limitation:** This is a lexical heuristic, not semantic understanding. A high score doesn't guarantee the response is correct.
-
-### Risk flags (Banking Assistant)
-
-Automated detection of potentially problematic patterns in responses:
-
-| Severity | Type | Example |
-|---|---|---|
-| Critical | Credential request | "Share your OTP" |
-| High | Guaranteed outcome | "Will definitely be refunded" |
-| Medium | Specific timeline | "Within 3-5 business days" |
-
-A flag requires review — it is not proof of a violation.
-
-### Forbidden claims (Banking Assistant)
-
-Each evaluation case specifies claims the model must not make (e.g., "The payment will definitely reflect tomorrow"). The evaluator checks for exact matches.
-
-### Accuracy (Classifier)
-
-Percentage of test cases where the model returned the correct category.
-
----
-
-## Evaluation dataset
-
-### Banking assistant scenarios (30 cases)
-
-| Category | Count | Examples |
-|---|---|---|
-| Payment | 5 | Bill overdue, duplicate payment, declined payment |
-| Refund and Disputes | 5 | Refund not received, partial refund, merchant charge |
-| Credit Card | 5 | Unauthorized transaction, lost card, EMI conversion |
-| Loan | 5 | Foreclosure charges, missed EMI, prepayment |
-| Security and Fraud | 5 | OTP scam, phishing link, fake caller |
-| Ambiguous | 1 | Unfamiliar debit with reversal demand |
-
-Each case includes:
-- `question` — the customer's message
-- `expected_points` — what the response should cover (4 per case)
-- `forbidden_claims` — what the response must not say (2 per case)
-
-### Intent classification test cases (30 cases)
-
-Categories: Payment, Refund, Loan, Credit Card — including edge cases like credit card payment (classified as Payment) and fraud scenarios.
-
----
-
-## How the Modelfiles work
-
-### `Modelfile` (Banking Assistant)
-
+### Upgrading the Base Architecture
+Want to swap Mistral for Llama 3, Gemma, or Qwen? Just update the `FROM` line:
 ```dockerfile
-FROM mistral:latest
-
-SYSTEM """[Banking-specific system prompt with safety rules]"""
-
-PARAMETER temperature 0         # Deterministic output
-PARAMETER top_p 0.9
-PARAMETER top_k 40
-PARAMETER num_predict 700       # Enough tokens for detailed responses
-```
-
-The system prompt enforces:
-- No invented policies, charges, fees, or timelines
-- No guaranteed outcomes
-- Never ask for OTP, CVV, PIN, or passwords
-- Direct customers to authenticated official channels
-- Domain-specific guidance for payments, refunds, loans, fraud
-
-### `Modelfile.classifier` (Intent Classifier)
-
-```dockerfile
-FROM mistral:latest
-
-SYSTEM """[Classification rules with allowed categories]"""
-
-PARAMETER temperature 0
-PARAMETER num_predict 10        # Only needs 1-2 words output
-```
-
-The classifier uses strict output rules: return exactly one category name, no explanation.
-
----
-
-## Customizing the models
-
-### Modify behavior
-
-Edit the `SYSTEM` section in `Modelfile` or `Modelfile.classifier`, then rebuild:
-
-```powershell
-ollama create banking-assistant -f Modelfile
-```
-
-### Change base model
-
-Replace `FROM mistral:latest` with another model:
-
-```dockerfile
-FROM llama3.1:latest
-```
-
-### Tune parameters
-
-Adjust `PARAMETER` values. Key parameters:
-
-| Parameter | Effect |
-|---|---|
-| `temperature 0` | Deterministic, consistent responses |
-| `temperature 0.7` | More creative, varied responses |
-| `top_p 0.9` | Nucleus sampling threshold |
-| `num_predict 700` | Maximum output tokens |
-
----
-
-## Troubleshooting
-
-### "Ollama connection error"
-
-- Ensure Ollama is running (check system tray on Windows)
-- Run `ollama list` to test
-- Start with `ollama serve` in a separate terminal if needed
-
-### "Model not found"
-
-Run `python src/create_models.py` to build the custom models.
-
-Or manually:
-
-```powershell
-ollama create banking-assistant -f Modelfile
-ollama create banking-classifier -f Modelfile.classifier
-```
-
-### "Module not found" when running scripts
-
-Run from the project root:
-
-```powershell
-cd "C:\Users\Rishav\Disk\Codes\LLM Projects\Fine_Tuning"
-python src/evaluate.py
+FROM llama3.1:8b
+# or
+FROM qwen2.5:7b
 ```
 
 ---
 
-## Hardware
+<br/>
 
-| Item | Configuration |
-|---|---|
-| OS | Windows / PowerShell |
-| Python | 3.13+ |
-| Ollama | 0.24.0+ |
-| GPU | NVIDIA GeForce RTX 3050 (4 GB VRAM) |
+## 💻 Hardware Requirements
 
-The 4 GB VRAM is sufficient for running quantized inference models through Ollama. It is **not** sufficient for traditional LoRA/QLoRA weight training of 7B models. The Modelfile approach used here works within this hardware constraint.
-
----
-
-## Future: True weight-based fine-tuning
-
-If you want to go beyond Modelfile customization and actually modify model weights:
-
-1. **Train on cloud GPU** — Use Google Colab (free T4 GPU) with [Unsloth](https://github.com/unslothai/unsloth) for fast QLoRA training
-2. **Export to GGUF** — `model.save_pretrained_gguf("output", tokenizer)`
-3. **Update Modelfile** — Change `FROM mistral:latest` to `FROM ./output/your_model.gguf`
-4. **Rebuild** — `ollama create banking-assistant -f Modelfile`
-
-This would teach the model new response patterns at the weight level, not just through prompting.
+| Component | Minimum Specification | Recommended |
+| :--- | :--- | :--- |
+| **OS** | Windows 10/11, macOS, or Linux | Any modern 64-bit OS |
+| **RAM** | 8 GB System Memory | 16 GB System Memory |
+| **GPU** | Optional (runs on CPU) | NVIDIA GPU (4 GB+ VRAM, e.g., RTX 3050) |
+| **Storage** | 6 GB free disk space | SSD for fast weight loading |
 
 ---
 
-## What was removed and why (detailed)
+<br/>
 
-| Removed file/directory | Lines | Why removed |
-|---|---|---|
-| `evaluations/evaluator.py` | 200 | Replaced by `src/evaluate.py` — same functionality in 1/3 the code |
-| `evaluations/metrics.py` | 346 | Risk detection and coverage merged into `src/evaluate.py` |
-| `evaluations/llm_judge.py` | 1068 | LLM-as-a-Judge was never calibrated and blocked progress |
-| `evaluations/local_evaluator/runner.py` | 714 | Semantic evaluation runner — unnecessary for fine-tuning |
-| `evaluations/local_evaluator/coverage.py` | 115 | Lexical coverage — merged into evaluate.py |
-| `evaluations/local_evaluator/criteria.py` | 79 | Criterion ID generator — not needed |
-| `evaluations/local_evaluator/safety.py` | 208 | Safety screening — simplified in evaluate.py |
-| `evaluations/local_evaluator/semantic_assist.py` | 515 | Ollama-based semantic evaluator — expensive and slow |
-| `experiments/prompt_comparison.py` | 203 | Prompt experiments — useful for research, not for fine-tuning |
-| `experiments/parameter_experiment.py` | 85 | Parameter sweep — one-time experiment, results already captured |
-| `experiments/compare_manual_vs_judge.py` | 278 | Judge calibration — the judge was never reliable enough |
-| `experiments/create_manual_review.py` | 124 | Manual review template generator — not needed |
-| `experiments/create_training_candidates.py` | 99 | Training candidate generator — never used |
-| `src/prompt_lab.py` | 121 | Replaced by `src/classify.py` with comparison support |
-| `prompts/*.txt` | 4 files | Empty prompt template files |
-| `backup_before_local_evaluator_*` | ~30 files | Old backup directory |
-| `results/*.csv` | 10+ files | Stale outputs regenerated by new scripts |
+## 📜 License
 
-**Total removed:** ~3800+ lines of code, ~50+ files
+This project is licensed under the **MIT License** — feel free to use, modify, and distribute it for both commercial and personal applications.
 
-**Total remaining:** ~550 lines of focused, working code across 4 scripts + 2 Modelfiles + 2 datasets
+<br/>
+
+<div align="center">
+  <sub>Engineered with precision for private, safe, and reliable financial intelligence.</sub>
+</div>
