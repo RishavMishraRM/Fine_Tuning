@@ -1,22 +1,22 @@
 <div align="center">
 
-# ⚡ PromptTune: LLM Fine-Tuning via Prompt Engineering
+# ⚡ PromptTune: The Complete LLM Fine-Tuning & Adaptation Suite
 
-### *A Production Guide & Framework for Domain-Adapting Open-Weights LLMs Using System Directives, Parameter Hardening, and Ollama Modelfiles — 100% Locally.*
+### *A Production Guide & Master Repository for 20 Modern Fine-Tuning, Alignment, and Prompt-Engineered Adaptation Techniques — from Zero-Weight Ollama Modelfiles to LoRA, DPO, and GRPO.*
 
 <br/>
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Ollama](https://img.shields.io/badge/Ollama-Local_Runtime-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
-[![Base Model Agnostic](https://img.shields.io/badge/Base_Models-Mistral%20%7C%20LLaMA%20%7C%20Qwen%20%7C%20Gemma-FF7000?style=for-the-badge)](https://ollama.com)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.2%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
+[![HuggingFace](https://img.shields.io/badge/PEFT%20%2F%20TRL-Supported-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co)
 [![License](https://img.shields.io/badge/License-MIT-10B981?style=for-the-badge)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-6366F1?style=for-the-badge)](https://ollama.com)
 
 <p align="center">
-  <b>Zero-Weight Specialization</b> • <b>Deterministic Guardrails</b> • <b>Hyperparameter Calibration</b> • <b>Automated Evaluation Suite</b>
+  <b>20 Fine-Tuning Architectures</b> • <b>Zero-Weight Modelfile Tuning</b> • <b>Deterministic Guardrails</b> • <b>Empirical Benchmarks</b>
 </p>
 
-[The Methodology](#-the-methodology-fine-tuning-via-prompt-engineering) • [How to Build a Custom Model](#-how-to-fine-tune-any-llm-via-modelfile) • [Case Study: Financial AI](#-case-study-banking--financial-services) • [Parameters Reference](#-hyperparameters--runtime-parameters) • [Benchmarks](#-benchmarks--empirical-results) • [Quick Start](#-quick-start)
+[Prompt Tuning Methodology](#-the-methodology-fine-tuning-via-prompt-engineering) • [Master Taxonomy of 20 Techniques](#-master-taxonomy-all-20-fine-tuning-techniques) • [Case Study & Benchmarks](#-case-study-banking--financial-services) • [Parameters Reference](#-hyperparameters--runtime-parameters) • [Quick Start](#-quick-start)
 
 ---
 
@@ -28,9 +28,9 @@
 
 ### What is "Zero-Weight" Fine-Tuning?
 
-When developers talk about "fine-tuning", they typically mean **Weight-Based Fine-Tuning** (LoRA, QLoRA, or Full Parameter Fine-Tuning). While powerful, training neural weights requires high-end cloud GPU clusters, extensive formatted training corpuses, hours of gradient descent, and carries the risk of **catastrophic forgetting** (where the model loses general reasoning).
+When developers discuss "fine-tuning", they typically mean **Weight-Based Fine-Tuning** (LoRA, QLoRA, or Full Parameter Fine-Tuning). While essential for deep linguistic domain shifts, training neural network weights requires dedicated GPU clusters, large dataset formatting, long training iterations, and introduces the risk of **catastrophic forgetting** (where a model loses foundational reasoning skills).
 
-**Prompt-Engineered Fine-Tuning (Modelfile-Based Model Specialization)** adapts model behavior at the container level:
+**Prompt-Engineered Fine-Tuning (Modelfile-Based Model Specialization)** adapts model behavior at the container manifest level:
 1. **Permanent Persona Anchoring:** The base model is wrapped with a hardened system directive embedded directly into the model manifest.
 2. **Deterministic Sampling Constraints:** Temperature, nucleus sampling ($top\_p$), vocabulary pooling ($top\_k$), and repetition penalties are tuned and locked.
 3. **Strict Negative Boundaries:** Guardrails specify what the model *must never* say or do.
@@ -39,16 +39,16 @@ When developers talk about "fine-tuning", they typically mean **Weight-Based Fin
 
 <br/>
 
-### ⚖️ Comparison: Traditional Fine-Tuning vs. Prompt-Engineered Specialization
+### ⚖️ Comparison: Traditional Weight Tuning vs. Prompt-Engineered Specialization
 
 <div align="center">
 
-| Dimension | 🏋️ Traditional Fine-Tuning (LoRA / QLoRA) | ⚡ Prompt-Engineered Tuning (Modelfile) |
+| Dimension | 🏋️ Traditional Weight Fine-Tuning (LoRA / QLoRA / FFT) | ⚡ Prompt-Engineered Tuning (Modelfile) |
 | :--- | :--- | :--- |
-| **Mechanism** | Updates adapter weight matrices ($\Delta W$) | Hardens system directives, stops, & decoding parameters |
+| **Mechanism** | Updates adapter weight matrices ($\Delta W$) or full tensors | Hardens system directives, stops, & decoding parameters |
 | **Hardware Required** | 16 GB - 80 GB+ VRAM (A100 / H100) | **Runs on any Consumer GPU or CPU (4 GB VRAM)** |
-| **Build Time** | Hours to days of training | **Instant (< 5 seconds via `ollama create`)** |
-| **Cost** | Cloud compute charges ($$$) | **$0.00 — 100% Free & Local** |
+| **Build Time** | Hours to days of gradient descent | **Instant (< 5 seconds via `ollama create`)** |
+| **Compute Cost** | Cloud compute charges ($$$) | **$0.00 — 100% Free & Local** |
 | **Risk of Forgetting** | High (degrades unrelated reasoning tasks) | **Zero (base model reasoning stays intact)** |
 | **Safety & Guardrails** | Soft (can be jailbroken or bypassed) | **Strict (enforced via stop tokens & parameter clamps)** |
 | **Portability** | Requires checkpoint weights + adapter merges | **Single plain-text `Modelfile` recipe** |
@@ -59,84 +59,155 @@ When developers talk about "fine-tuning", they typically mean **Weight-Based Fin
 
 ---
 
-## 🛠️ How to Fine-Tune ANY LLM via Modelfile
+## 📚 Master Taxonomy: All 20 Fine-Tuning Techniques
 
-Creating a specialized local model requires four modular components:
+This repository provides production-ready, modular Python implementations for **all 20 major fine-tuning, parameter-efficient adaptation, continual pretraining, and preference alignment techniques** located in [`fine_tuning_techniques/`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques).
 
 ```mermaid
-flowchart LR
-    A["1. Base Foundation\n(FROM mistral / llama3)"] --> B["2. Persona & Directives\n(SYSTEM Prompt)"]
-    B --> C["3. Hyperparameters\n(PARAMETER temp, top_p, ctx)"]
-    C --> D["4. Output Clamping\n(PARAMETER stop, num_predict)"]
-    D --> E["🚀 ollama create custom-model\n(Packaged Inference Model)"]
+flowchart TD
+    FT["🎯 LLM Adaptation & Alignment Spectrum"]
 
-    style A fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
-    style B fill:#1e1e2e,stroke:#a6e3a1,color:#cdd6f4
-    style C fill:#1e1e2e,stroke:#f9e2af,color:#cdd6f4
-    style D fill:#1e1e2e,stroke:#f38ba8,color:#cdd6f4
-    style E fill:#181825,stroke:#cba6f7,stroke-width:2px,color:#cdd6f4
+    FT --> W["🏋️ 1. Weight-Level Adaptation"]
+    W --> W1["01. Full Fine-Tuning (FFT)"]
+    W --> W2["02. PEFT Architecture Overview"]
+    W --> W3["03. LoRA (Low-Rank Adaptation)"]
+    W --> W4["04. QLoRA (4-bit Quantized LoRA)"]
+    W --> W5["13. Bottleneck Adapter Tuning"]
+
+    FT --> S["📝 2. Supervised & Instruction Tuning"]
+    S --> S1["05. Supervised Fine-Tuning (SFT)"]
+    S --> S2["06. Instruction Tuning (Masked Loss)"]
+
+    FT --> C["🌐 3. Pretraining & Continual Learning"]
+    C --> C1["07. Continued Pretraining (CPT)"]
+    C --> C2["08. Domain-Adaptive Pretraining (DAPT)"]
+    C --> C3["09. Task-Adaptive Pretraining (TAPT)"]
+
+    FT --> P["🎛️ 4. Soft Prompts & Prefix Tuning"]
+    P --> P1["14. Prefix Tuning (Virtual KV Vectors)"]
+    P --> P2["15. Prompt Tuning (Soft Input Embeddings)"]
+    P --> P3["16. P-Tuning v1/v2 (LSTM Reparameterization)"]
+
+    FT --> A["🤝 5. Preference Alignment & RL"]
+    A --> A1["10. RLHF (3-Stage Reward Model + PPO)"]
+    A --> A2["11. Direct Preference Optimization (DPO)"]
+    A --> A3["17. Odds Ratio Preference Optimization (ORPO)"]
+    A --> A4["18. Kahneman-Tversky Optimization (KTO)"]
+    A --> A5["19. Proximal Policy Optimization (PPO Engine)"]
+    A --> A6["20. Group Relative Policy Optimization (GRPO)"]
+
+    FT --> D["🧊 6. Compression & Distillation"]
+    D --> D1["12. Knowledge Distillation (Teacher-Student Logits)"]
 ```
 
 <br/>
 
-### The Anatomy of an Ollama Modelfile
+### Detailed Breakdown of All 20 Techniques
 
-```dockerfile
-# 1. BASE FOUNDATION: Select any open-weights model
-FROM mistral:latest
+#### 1. Full Fine-Tuning (FFT)
+* **Mathematical Concept:** Updates all model parameters $W \in \mathbb{R}^{d \times k}$ via backpropagation: $W_{new} = W_{old} - \eta \nabla \mathcal{L}$.
+* **How It Must Be Done:** Requires storing parameters, gradients, and optimizer states (AdamW requires 16 bytes per parameter in mixed precision). A 7B parameter model requires $\approx 112\text{ GB}$ VRAM. Employs DeepSpeed ZeRO-3 or FSDP across multi-GPU nodes.
+* **Code Implementation:** [`fine_tuning_techniques/01_full_fine_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/01_full_fine_tuning.py) — Configures distributed CausalLM training with gradient checkpointing and full weight updates.
 
-# 2. SYSTEM INSTRUCTIONS: Define domain expertise, tone, and negative constraints
-SYSTEM """You are a domain specialist AI assistant.
-- Provide technically verified, step-by-step guidance.
-- Never speculate or invent unverified timelines, policies, or outcomes.
-- If requested information is unavailable, clearly state the missing prerequisite.
-- Never ask for or store sensitive user credentials."""
+#### 2. Parameter-Efficient Fine-Tuning (PEFT Overview)
+* **Mathematical Concept:** Freezes base weights $W_0$ and optimizes a tiny parameter subspace $\theta$: $h = W_0 x + \Delta W(\theta)x$, where $|\theta| \ll |W_0|$.
+* **How It Must Be Done:** Targets $0.05\% - 2\%$ trainable parameter ratios, cutting optimizer memory by up to 99%.
+* **Code Implementation:** [`fine_tuning_techniques/02_peft_overview.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/02_peft_overview.py) — Provides an automated taxonomy comparison and parameter footprint inspector across PEFT methods.
 
-# 3. SAMPLING HYPERPARAMETERS: Lock down generation randomness
-PARAMETER temperature 0          # 0.0 = Greedy decoding for deterministic consistency
-PARAMETER top_p 0.9              # Nucleus sampling cutoff to discard improbable tokens
-PARAMETER top_k 40               # Pool candidate logits to top 40 vocabulary choices
-PARAMETER num_ctx 4096           # Context window allocation (in tokens)
-PARAMETER repeat_penalty 1.1     # Penalize redundant phrases and repetitive loops
-PARAMETER seed 42                # Pinned seed for reproducible evaluation
+#### 3. LoRA (Low-Rank Adaptation)
+* **Mathematical Concept:** Decomposes weight updates into low-rank matrices: $\Delta W = \frac{\alpha}{r}(B \times A)$, where $A \in \mathbb{R}^{r \times k} \sim \mathcal{N}(0, \sigma^2)$ and $B \in \mathbb{R}^{d \times r} = 0$.
+* **How It Must Be Done:** Select rank $r \in [8, 64]$ and scaling $\alpha = 2r$. Injects adapters into attention projections (`q_proj`, `v_proj`) and MLP layers. Zero inference latency once merged ($W_{merged} = W_0 + \frac{\alpha}{r}BA$).
+* **Code Implementation:** [`fine_tuning_techniques/03_lora.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/03_lora.py) — Implements adapter initialization, training loop, and weight-folding export.
 
-# 4. STOP SEQUENCES: Prevent runaway generation and conversational clutter
-PARAMETER num_predict 700        # Maximum output token ceiling
-PARAMETER stop "<|im_end|>"
-PARAMETER stop "[INST]"
-PARAMETER stop "[/INST]"
-```
+#### 4. QLoRA (Quantized Low-Rank Adaptation)
+* **Mathematical Concept:** Freezes base model weights in **4-bit NormalFloat (NF4)** with Double Quantization (DQ), calculating gradients through frozen 4-bit weights into 16-bit LoRA adapters.
+* **How It Must Be Done:** Requires `bitsandbytes`, `prepare_model_for_kbit_training`, and Paged Optimizers (`paged_adamw_8bit`) to eliminate memory spikes during gradient checkpointing. Allows fine-tuning 7B models on 6 GB VRAM and 70B models on 48 GB VRAM.
+* **Code Implementation:** [`fine_tuning_techniques/04_qlora.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/04_qlora.py) — Sets up 4-bit NF4 quantization configs and low-memory training harnesses.
 
-<br/>
+#### 5. Supervised Fine-Tuning (SFT)
+* **Mathematical Concept:** Causal language modeling on curated dialogue demonstrations: $\mathcal{L}_{SFT} = -\sum_{t=1}^T \log P(y_t \mid x, y_{<t}; \theta)$.
+* **How It Must Be Done:** Formats multi-turn user/assistant conversations with standardized chat templates (`<|im_start|>user...<|im_end|>`).
+* **Code Implementation:** [`fine_tuning_techniques/05_sft.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/05_sft.py) — Implements HuggingFace TRL `SFTTrainer` with token packing.
 
-### Two Architectural Patterns Supported
+#### 6. Instruction Fine-Tuning
+* **Mathematical Concept:** Adapts models to follow natural language task directives with **Response-Only Loss Masking**.
+* **How It Must Be Done:** Tokens belonging to the prompt instruction are masked with label `-100`. Gradients are calculated exclusively on completion tokens, ensuring model capacity is focused on generation rather than memorizing prompt syntax.
+* **Code Implementation:** [`fine_tuning_techniques/06_instruction_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/06_instruction_tuning.py) — Utilizes TRL's `DataCollatorForCompletionOnlyLM` with Alpaca/ChatML templates.
 
-<table>
-<tr>
-<td width="50%" valign="top">
+#### 7. Continued Pretraining (CPT)
+* **Mathematical Concept:** Continues unsupervised next-token prediction on large raw document streams: $\mathcal{L}_{CPT} = -\sum_{i=1}^N \log P(w_i \mid w_{<i})$.
+* **How It Must Be Done:** Documents are concatenated and chopped into uniform block sizes (e.g., 2048 or 4096 tokens) with chunk packing. Uses a conservative learning rate ($1\times 10^{-5}$ to $3\times 10^{-5}$) with cosine decay to prevent catastrophic forgetting.
+* **Code Implementation:** [`fine_tuning_techniques/07_cpt.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/07_cpt.py) — Demonstrates token concatenation and packed chunk modeling.
 
-### Pattern A: Generative Domain Assistant
-* **Goal:** Deliver comprehensive, context-aware assistance while strictly observing safety and compliance guardrails.
-* **Hyperparameters:**
-  * `temperature: 0.0`
-  * `num_ctx: 4096`
-  * `num_predict: 700`
-* **Use Cases:** Customer service, code review, medical triage guidance, legal drafting, technical troubleshooting.
+#### 8. Domain-Adaptive Pretraining (DAPT)
+* **Mathematical Concept:** Continued pre-training on broad domain-specific text (e.g., millions of legal briefs, medical papers, or financial filings) to internalize domain vocabulary and sentence structure.
+* **How It Must Be Done:** Monitored using **Domain Perplexity** ($PPL = \exp(\mathcal{L}_{CE})$). A steep drop in perplexity on a held-out domain validation set verifies vocabulary adaptation before supervised fine-tuning.
+* **Code Implementation:** [`fine_tuning_techniques/08_dapt.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/08_dapt.py) — Implements domain validation splits and perplexity tracking.
 
-</td>
-<td width="50%" valign="top">
+#### 9. Task-Adaptive Pretraining (TAPT)
+* **Mathematical Concept:** Pre-training on the exact, hyper-targeted distribution of unlabeled task queries (e.g., raw customer support tickets) immediately prior to downstream task tuning.
+* **How It Must Be Done:** Demonstrates that even small amounts of task data ($1\text{ MB} - 50\text{ MB}$) can yield significant downstream benchmark gains when applied right before task fine-tuning.
+* **Code Implementation:** [`fine_tuning_techniques/09_tapt.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/09_tapt.py) — Implements task-adaptive causal pretraining pipelines.
 
-### Pattern B: Constrained Classifier / Router
-* **Goal:** Ingest unstructured human messages and output a strictly constrained category tag with zero conversational filler.
-* **Hyperparameters:**
-  * `temperature: 0.0`
-  * `num_predict: 10`
-  * `stop: ["\n", "<|im_end|>"]`
-* **Use Cases:** Ticket dispatching, sentiment extraction, intent routing, content moderation, triage automation.
+#### 10. Reinforcement Learning from Human Feedback (RLHF - PPO)
+* **Mathematical Concept:** 3-stage alignment: 1) SFT, 2) Train Bradley-Terry reward model $r_\psi(x, y)$, 3) Optimize policy $\pi_\theta$ using PPO with a KL penalty: $\max_\theta \mathbb{E}[r_\psi(x, y) - \beta \mathbb{D}_{KL}(\pi_\theta \parallel \pi_{ref})]$.
+* **How It Must Be Done:** Coordinates 4 concurrent networks: Actor (Policy), Critic (Value Head), Reference Model (Frozen SFT), and Reward Model.
+* **Code Implementation:** [`fine_tuning_techniques/10_rlhf_ppo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/10_rlhf_ppo.py) — Constructs sequence classification reward models and TRL `PPOTrainer`.
 
-</td>
-</tr>
-</table>
+#### 11. Direct Preference Optimization (DPO)
+* **Mathematical Concept:** Derives an exact analytical substitution for the optimal reward function $r^*(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{ref}(y \mid x)}$, solving RLHF without a reward model:
+  $$\mathcal{L}_{DPO} = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{ref}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{ref}(y_l \mid x)} \right) \right]$$
+* **How It Must Be Done:** Requires pairwise preference datasets containing `{prompt, chosen, rejected}` tuples. Eliminates RL training instability and reduces VRAM requirements by half.
+* **Code Implementation:** [`fine_tuning_techniques/11_dpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/11_dpo.py) — Implements TRL `DPOTrainer` with LoRA integration.
+
+#### 12. Knowledge Distillation (KD)
+* **Mathematical Concept:** Compresses an overparameterized Teacher ($T$) into a compact Student ($S$) using a blended loss:
+  $$\mathcal{L}_{KD} = (1 - \alpha)\mathcal{L}_{CE}(y, \sigma(z_S)) + \alpha \tau^2 \mathbb{D}_{KL}\left(\sigma(z_T / \tau) \parallel \sigma(z_S / \tau)\right)$$
+* **How It Must Be Done:** Temperature $\tau > 1$ softens logit distributions to expose "dark knowledge" (relative probabilities across non-target tokens).
+* **Code Implementation:** [`fine_tuning_techniques/12_knowledge_distillation.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/12_knowledge_distillation.py) — Features a custom `DistillationTrainer` subclass with forward-pass logit softened KL divergence.
+
+#### 13. Adapter-Based Fine-Tuning (Bottleneck Adapters)
+* **Mathematical Concept:** Series bottleneck layers (Houlsby et al., 2019; Pfeiffer et al., 2020) placed after attention and FFN blocks: $\text{Adapter}(h) = \text{LayerNorm}(h + W_{up} \cdot \text{GeLU}(W_{down} \cdot h))$.
+* **How It Must Be Done:** Down-projects hidden dimension $d \to m$ (where $m \ll d$) and up-projects back to $d$, keeping the base model completely frozen.
+* **Code Implementation:** [`fine_tuning_techniques/13_adapter_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/13_adapter_tuning.py) — Custom PyTorch implementation of the `BottleneckAdapter` module and layer wrapping harness.
+
+#### 14. Prefix Tuning
+* **Mathematical Concept:** Injects learnable virtual Key and Value tensors ($P_K^{(l)}, P_V^{(l)}$) into the Multi-Head Attention of **every** transformer layer (Li & Liang, 2021).
+* **How It Must Be Done:** Attends across combined representations: $\text{Attention}(Q, [P_K; K], [P_V; V])$. Parameterized initially via a 2-layer MLP for training stability.
+* **Code Implementation:** [`fine_tuning_techniques/14_prefix_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/14_prefix_tuning.py) — Implements PEFT `PrefixTuningConfig` for causal language models.
+
+#### 15. Prompt Tuning (Soft Prompts)
+* **Mathematical Concept:** Injects $p$ continuous virtual token embeddings $P \in \mathbb{R}^{p \times d}$ **exclusively** into the input word embedding space (Lester et al., 2021).
+* **How It Must Be Done:** Freezes 100% of the transformer layers. As models scale past 10B parameters, Prompt Tuning matches Full Fine-Tuning while training fewer than $0.01\%$ of parameters.
+* **Code Implementation:** [`fine_tuning_techniques/15_prompt_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/15_prompt_tuning.py) — Configures text-initialized soft prompt embeddings with `PromptTuningConfig`.
+
+#### 16. P-Tuning (v1 / v2)
+* **Mathematical Concept:** Models sequential dependencies between virtual prompt tokens using an auxiliary prompt encoder (Bidirectional LSTM + MLP) rather than treating them as independent soft vectors (Liu et al., 2022).
+* **How It Must Be Done:** In P-Tuning v2, deep prompt tokens are injected across all transformer layers to improve convergence on complex reasoning tasks.
+* **Code Implementation:** [`fine_tuning_techniques/16_p_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/16_p_tuning.py) — Configures PEFT `PromptEncoderConfig` with BiLSTM reparameterization.
+
+#### 17. ORPO (Odds Ratio Preference Optimization)
+* **Mathematical Concept:** Unifies SFT and preference alignment into a single loss function without needing a reference model (Hong et al., 2024):
+  $$\mathcal{L}_{ORPO} = \mathcal{L}_{SFT} + \lambda \mathcal{L}_{OR}, \quad \text{where} \quad \mathcal{L}_{OR} = -\log \sigma \left( \log \frac{\text{odds}_\theta(y_w \mid x)}{\text{odds}_\theta(y_l \mid x)} \right)$$
+* **How It Must Be Done:** Replaces the traditional two-stage pipeline (SFT $\to$ DPO) with a single-step training pass, reducing VRAM overhead by avoiding a frozen reference model.
+* **Code Implementation:** [`fine_tuning_techniques/17_orpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/17_orpo.py) — Implements TRL `ORPOTrainer` on preference pairs.
+
+#### 18. KTO (Kahneman-Tversky Optimization)
+* **Mathematical Concept:** Grounds LLM alignment in behavioral economics and Prospect Theory (Ethayarajh et al., 2024). Maximizes utility directly on **unpaired** binary user feedback (thumbs-up / thumbs-down), applying loss aversion to penalize negative responses more heavily than rewarding positive ones.
+* **How It Must Be Done:** Does not require pairs of chosen and rejected responses. Aligns directly on production user feedback telemetry `{prompt, completion, label: bool}`.
+* **Code Implementation:** [`fine_tuning_techniques/18_kto.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/18_kto.py) — Implements TRL `KTOTrainer` with asymmetric loss aversion weights.
+
+#### 19. PPO (Proximal Policy Optimization Engine)
+* **Mathematical Concept:** Prevents destabilizing policy updates through a clipped probability ratio surrogate:
+  $$\mathcal{L}^{CLIP}(\theta) = \hat{\mathbb{E}}_t \left[ \min\left( r_t(\theta)\hat{A}_t, \, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t \right) \right]$$
+* **How It Must Be Done:** Combines policy surrogate loss, Generalized Advantage Estimation (GAE) from the Critic value head, and KL penalties from the initial policy.
+* **Code Implementation:** [`fine_tuning_techniques/19_ppo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/19_ppo.py) — Demonstrates mathematical clipped surrogate loss calculation and full PPO trainer orchestration.
+
+#### 20. GRPO (Group Relative Policy Optimization)
+* **Mathematical Concept:** Eliminates the memory-heavy Critic/Value network entirely (DeepSeek-R1 / Shao et al., 2024). Samples a **group** of $G$ outputs $\{o_1, \dots, o_G\}$ per prompt, scores them with verifiable reward functions, and computes group-relative normalized advantages:
+  $$\hat{A}_i = \frac{r_i - \text{mean}(\{r_1, \dots, r_G\})}{\text{std}(\{r_1, \dots, r_G\}) + \epsilon}$$
+* **How It Must Be Done:** Saves $\approx 50\%$ VRAM compared to traditional PPO while driving emergent reasoning capabilities through rule-based and format verifiers.
+* **Code Implementation:** [`fine_tuning_techniques/20_grpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/20_grpo.py) — Implements group-relative advantage normalization and TRL `GRPOTrainer` pipelines.
 
 <br/>
 
@@ -144,7 +215,7 @@ PARAMETER stop "[/INST]"
 
 ## 🔬 Case Study: Banking & Financial Services
 
-To demonstrate this methodology empirically on high-stakes, safety-critical data, this repository includes a complete reference implementation tailored for **Indian Banking Customer Support & Intent Classification**.
+To evaluate these adaptation techniques on real-world, safety-critical data, this repository features an empirical benchmark suite tailored for **Customer Support & Intent Classification in Indian Banking**.
 
 ```mermaid
 flowchart TD
@@ -175,7 +246,7 @@ flowchart TD
 
 ### The Reference Models
 
-* **`banking-assistant`**: Built from [`Modelfile`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile). Engineered to answer queries regarding overdue payments, duplicate debits, loan foreclosures, and disputed charges without ever asking for OTP/PIN/CVV credentials or promising unverified outcomes.
+* **`banking-assistant`**: Built from [`Modelfile`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile). Engineered to answer queries regarding overdue payments, duplicate debits, loan foreclosures, and disputed charges without asking for OTP/PIN/CVV credentials or promising unverified outcomes.
 * **`banking-classifier`**: Built from [`Modelfile.classifier`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile.classifier). Classifies inquiries into `Payment`, `Refund`, `Loan`, or `Credit Card` with token-constrained, single-word inference.
 
 <br/>
@@ -184,7 +255,7 @@ flowchart TD
 
 ## 🎛️ Hyperparameters & Runtime Parameters
 
-This framework documents and calibrates all hyperparameters across model compilation, inference decoding, and automated evaluation metrics:
+This framework documents and calibrates hyperparameters across model compilation, inference decoding, and automated evaluation metrics:
 
 ### 1. Model Inference Hyperparameters (Modelfiles)
 

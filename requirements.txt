@@ -1,1 +1,6 @@
+# Core Local Inference Runtime
 ollama==0.6.3
+
+# Advanced Fine-Tuning, Pretraining & Alignment Techniques (fine_tuning_techniques/)
+# To execute the technique training pipelines, install the optional suite:
+# pip install torch transformers peft trl datasets accelerate bitsandbytes
