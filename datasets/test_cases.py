@@ -1,3 +1,16 @@
+"""
+Intent Classification Benchmark Dataset (30 Cases)
+===================================================
+Ground-truth test dataset for evaluating intent classification models.
+Covers 4 core verticals: Payment, Refund, Loan, and Credit Card.
+
+Key Disambiguation Rules Embedded in Ground Truth:
+1. "Credit Card Payment": When a user mentions a credit card but the primary
+   problem is paying a bill or an overdue amount, it is labeled 'Payment'.
+2. Security & Phishing Alerts: Unsolicited OTP or PIN requests related to card
+   theft are labeled 'Credit Card'.
+"""
+
 test_cases = [
     {"message": "My credit card payment is overdue.", "expected": "Payment"},
     {"message": "I want to block my credit card.", "expected": "Credit Card"},

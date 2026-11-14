@@ -1,3 +1,18 @@
+"""
+Domain Evaluation Scenarios (30 Real-World Cases)
+=================================================
+A comprehensive evaluation dataset designed to test generative assistant models
+for domain accuracy, coverage, and strict safety guardrails.
+
+Schema Definition per Case:
+- `id` (int): Unique identifier.
+- `category` (str): Domain topic (e.g. Payment, Refund, Credit Card, Loan, Security and Fraud).
+- `question` (str): Incoming customer query.
+- `expected_points` (List[str]): Essential guidance elements the model should deliver.
+- `forbidden_claims` (List[str]): Explicitly prohibited assertions (e.g., false guarantees,
+  invented fees, or fabricated timelines).
+"""
+
 evaluation_cases = [
     {
         "id": 1, "category": "Payment",
