@@ -1,0 +1,20 @@
+# Optional LLM Fine-Tuning, Alignment & Training Suite
+# Install this file if you want to execute neural network weight training
+# via the scripts in `fine_tuning_techniques/`.
+#
+# Installation:
+#   pip install -r requirements-training.txt
+#
+# For CUDA acceleration (recommended for GPU training):
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+torch>=2.2.0
+transformers>=4.40.0
+peft>=0.11.0
+trl>=0.9.0
+datasets>=2.19.0
+accelerate>=0.30.0
+
+# Optional 4-bit / 8-bit quantization for QLoRA (requires NVIDIA GPU with CUDA)
+# On Windows, prebuilt wheels: pip install bitsandbytes
+bitsandbytes>=0.43.0

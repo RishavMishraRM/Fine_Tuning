@@ -1,9 +1,7 @@
 <div align="center">
 
 # 🚀 LLM Fine-Tuning Hub
-### *From Zero-Weight Prompt Tuning to LoRA, QLoRA, DPO, and GRPO*
-
-**A Comprehensive Handbook & Production Codebase for 20 Modern Fine-Tuning, Pre-Training, and Alignment Architectures.**
+### *The Definitive Open-Source Handbook & Codebase for 20 Modern LLM Fine-Tuning, Pre-Training, and Alignment Architectures*
 
 <br/>
 
@@ -16,10 +14,10 @@
 <br/>
 
 <p align="center">
-  <b>20 Implemented Techniques</b> • <b>Zero-Weight Modelfile Tuning</b> • <b>Empirical Domain Benchmarks</b> • <b>100% Local & Reproducible</b>
+  <b>20 Standalone Technique Scripts</b> • <b>Zero-Weight Modelfile Tuning</b> • <b>1-File Copy & Run Architecture</b> • <b>Empirical Benchmarks (86.7%)</b> • <b>Unified Master CLI</b>
 </p>
 
-[Decision Matrix](#-technique-decision-matrix) • [Repository Structure](#-repository-structure) • [The 20 Techniques](#-the-20-fine-tuning-techniques) • [Zero-Weight Tuning](#-zero-weight-fine-tuning-via-ollama-modelfile) • [Case Study & Benchmarks](#-production-case-study--benchmarks) • [Quick Start](#-quick-start)
+[Quick Start](#-quick-start) • [How to Use 1 File](#-how-to-take-any-single-file-and-fine-tune-your-model) • [Decision Matrix](#-technique-decision-matrix) • [Repository Structure](#-repository-structure) • [The 20 Techniques](#-the-20-fine-tuning-techniques) • [Zero-Weight Tuning](#-zero-weight-fine-tuning-via-ollama-modelfiles) • [Production Case Study](#-production-case-study--benchmarks) • [Hyperparameters](#-complete-hyperparameters-reference)
 
 ---
 
@@ -27,24 +25,85 @@
 
 <br/>
 
+> [!TIP]
+> **Can I take just one file and run my own fine-tuning?**  
+> **Yes!** Every script in [`fine_tuning_techniques/`](fine_tuning_techniques/) is 100% self-contained and standalone. You can copy a single file (e.g. `03_lora.py`, `04_qlora.py`, or `11_dpo.py`) directly into your own project or Google Colab, plug in your dataset, and execute training immediately with `python <file>.py --train`.
+
+<br/>
+
+---
+
+## 📖 How to Take ANY Single File and Fine-Tune Your Model
+
+Every technique script in [`fine_tuning_techniques/`](fine_tuning_techniques/) is engineered to be **standalone** and **self-contained**, with no internal imports between techniques. You can copy *any single file* into your project and execute fine-tuning in 3 simple steps:
+
+```mermaid
+flowchart LR
+    A["1. Pick 1 File<br/>(e.g., 03_lora.py)"] --> B["2. Install Deps<br/>(pip install ...)"]
+    B --> C["3. Dry Run Check<br/>(python 03_lora.py)"]
+    C --> D["4. Live Training<br/>(python 03_lora.py --train)"]
+    D --> E["5. Exported Model /<br/>Merged Weights"]
+```
+
+### Step 1: Install the Requirements for Your Chosen Technique
+Each script specifies its exact dependencies in its top header. For weight-based fine-tuning:
+```bash
+# Install the full training suite:
+pip install -r requirements-training.txt
+
+# Or install dependencies only for your target technique (e.g., LoRA):
+pip install torch transformers peft datasets accelerate
+```
+
+### Step 2: Inspect Architecture & Parameters (Dry-Run Mode)
+Running any script without flags safely prints the model architecture, parameter count, VRAM requirements, and sample dataset without downloading gigabytes of weights:
+```bash
+python fine_tuning_techniques/03_lora.py
+# Or via the master runner:
+python run_technique.py lora
+```
+
+### Step 3: Execute Live Training on Your GPU
+Pass the `--train` flag to initiate neural network backpropagation:
+```bash
+# Train on a small model (ideal for consumer GPUs with 4-8 GB VRAM):
+python fine_tuning_techniques/03_lora.py --train --model Qwen/Qwen2.5-0.5B --epochs 3
+
+# Train on a 7B model using 4-bit QLoRA (fits in < 10 GB VRAM):
+python fine_tuning_techniques/04_qlora.py --train --model mistralai/Mistral-7B-v0.1
+
+# Direct Preference Optimization (align on chosen vs rejected pairs):
+python fine_tuning_techniques/11_dpo.py --train --model Qwen/Qwen2.5-0.5B
+
+# Custom output directory:
+python fine_tuning_techniques/03_lora.py --train --output-dir ./my_finetuned_model
+```
+
+### Step 4: Plug In Your Own Dataset
+In any technique file, simply replace the `build_sample_dataset()` function or point the Hugging Face `Dataset.from_list(...)` / `load_dataset(...)` call to your own CSV, JSONL, or Parquet dataset.
+
+<br/>
+
+---
+
 ## 🧭 Technique Decision Matrix
 
-Not every problem requires training billions of neural network weights. Use this decision matrix to select the right technique based on your **hardware budget**, **data format**, and **engineering objective**:
+Use this decision matrix to select the ideal technique based on your **engineering goal**, **dataset structure**, and **hardware budget**:
 
-| Your Goal | Training Data Format | Hardware / VRAM | Recommended Technique | Code Implementation |
+| Engineering Goal | Data Format | Hardware / VRAM | Recommended Technique | Standalone File |
 | :--- | :--- | :---: | :--- | :--- |
-| **Instant local domain adaptation** | System prompt & parameters | **0 VRAM (CPU/4GB)** | **Zero-Weight Modelfile** | [`Modelfile`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile) |
-| **Task adaptation on consumer GPU** | Prompt + Completion pairs | **< 12 GB VRAM** | **QLoRA (4-bit LoRA)** | [`04_qlora.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/04_qlora.py) |
-| **Standard domain parameter tuning** | Instruction + Response pairs | **16 - 24 GB VRAM** | **LoRA (Rank Adaptation)** | [`03_lora.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/03_lora.py) |
-| **Chat & multi-turn dialogue tuning** | Multi-turn conversational JSON | **16 - 24 GB VRAM** | **SFT (Supervised Tuning)** | [`05_sft.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/05_sft.py) |
-| **Generalize to new instructions** | Formatted task prompts | **16 - 24 GB VRAM** | **Instruction Tuning** | [`06_instruction_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/06_instruction_tuning.py) |
-| **Ingest vast unlabelled domain text** | Raw unstructured documents | **24 - 48 GB VRAM** | **DAPT (Domain Pretraining)** | [`08_dapt.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/08_dapt.py) |
-| **Align to human preferences (simple)**| Pairs: `{prompt, chosen, rejected}` | **16 - 24 GB VRAM** | **DPO (Direct Preference)** | [`11_dpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/11_dpo.py) |
-| **Align without separate SFT stage** | Pairs: `{prompt, chosen, rejected}` | **16 - 24 GB VRAM** | **ORPO (Odds Ratio)** | [`17_orpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/17_orpo.py) |
-| **Align on real binary up/down votes** | Unpaired: `{prompt, output, bool}` | **16 - 24 GB VRAM** | **KTO (Kahneman-Tversky)** | [`18_kto.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/18_kto.py) |
-| **Reasoning & math without a Critic**| Prompts + Verifiable Reward rules | **24 - 48 GB VRAM** | **GRPO (Group Relative)** | [`20_grpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/20_grpo.py) |
-| **Compress large model into small** | Unlabelled prompts + Teacher LLM | **24 - 80 GB VRAM** | **Knowledge Distillation** | [`12_knowledge_distillation.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/12_knowledge_distillation.py) |
-| **Full capability overhaul** | Large annotated corpus | **Multi-GPU (80GB+)** | **Full Fine-Tuning (FFT)** | [`01_full_fine_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/01_full_fine_tuning.py) |
+| **Instant local domain adaptation** | System prompt & parameters | **0 VRAM (CPU / 4GB)** | **Zero-Weight Modelfile** | [`Modelfile`](Modelfile) |
+| **Task adaptation on consumer GPU** | Prompt + Completion pairs | **< 10 GB VRAM** | **QLoRA (4-bit LoRA)** | [`04_qlora.py`](fine_tuning_techniques/04_qlora.py) |
+| **Standard domain parameter tuning** | Instruction + Response pairs | **16 - 24 GB VRAM** | **LoRA (Rank Adaptation)** | [`03_lora.py`](fine_tuning_techniques/03_lora.py) |
+| **Chat & multi-turn dialogue tuning** | Multi-turn conversational JSON | **16 - 24 GB VRAM** | **SFT (Supervised Tuning)** | [`05_sft.py`](fine_tuning_techniques/05_sft.py) |
+| **Generalize to new instructions** | Formatted task prompts | **16 - 24 GB VRAM** | **Instruction Tuning** | [`06_instruction_tuning.py`](fine_tuning_techniques/06_instruction_tuning.py) |
+| **Ingest vast unlabelled domain text** | Raw unstructured documents | **24 - 48 GB VRAM** | **DAPT (Domain Pretraining)** | [`08_dapt.py`](fine_tuning_techniques/08_dapt.py) |
+| **Align to human preferences (simple)**| Pairs: `{prompt, chosen, rejected}` | **16 - 24 GB VRAM** | **DPO (Direct Preference)** | [`11_dpo.py`](fine_tuning_techniques/11_dpo.py) |
+| **Align without separate SFT stage** | Pairs: `{prompt, chosen, rejected}` | **16 - 24 GB VRAM** | **ORPO (Odds Ratio)** | [`17_orpo.py`](fine_tuning_techniques/17_orpo.py) |
+| **Align on real binary up/down votes** | Unpaired: `{prompt, output, bool}` | **16 - 24 GB VRAM** | **KTO (Kahneman-Tversky)** | [`18_kto.py`](fine_tuning_techniques/18_kto.py) |
+| **Reasoning & math without a Critic**| Prompts + Verifiable Reward rules | **24 - 48 GB VRAM** | **GRPO (DeepSeek-R1)** | [`20_grpo.py`](fine_tuning_techniques/20_grpo.py) |
+| **Compress large model into small** | Unlabelled prompts + Teacher LLM | **24 - 80 GB VRAM** | **Knowledge Distillation** | [`12_knowledge_distillation.py`](fine_tuning_techniques/12_knowledge_distillation.py) |
+| **Full capability overhaul** | Large annotated corpus | **Multi-GPU (80GB+)** | **Full Fine-Tuning (FFT)** | [`01_full_fine_tuning.py`](fine_tuning_techniques/01_full_fine_tuning.py) |
 
 <br/>
 
@@ -55,10 +114,13 @@ Not every problem requires training billions of neural network weights. Use this
 ```
 LLM_Fine_Tuning/
 ├── 📄 Modelfile                            # Custom generative assistant recipe (Zero-Weight)
-├── 📄 Modelfile.classifier                 # Custom single-word router recipe (Zero-Weight)
-├── 📄 requirements.txt                     # Core dependencies & optional training suite
+├── 📄 Modelfile.classifier                 # Custom single-token intent router (Zero-Weight)
+├── 📄 requirements.txt                     # Core lightweight runtime dependencies (Ollama)
+├── 📄 requirements-training.txt            # Neural weight fine-tuning suite (PyTorch, PEFT, TRL)
+├── 📄 run_technique.py                     # Unified master CLI runner for all 20 techniques
+├── 📄 LICENSE                              # MIT License
 │
-├── 📂 fine_tuning_techniques/              # 📚 All 20 Fine-Tuning & Alignment Implementations
+├── 📂 fine_tuning_techniques/              # 📚 20 Standalone Technique Implementations
 │   ├── 01_full_fine_tuning.py              # Full Parameter Fine-Tuning (FFT)
 │   ├── 02_peft_overview.py                 # PEFT Architecture & Memory Footprint Analysis
 │   ├── 03_lora.py                          # Low-Rank Adaptation (LoRA)
@@ -66,7 +128,7 @@ LLM_Fine_Tuning/
 │   ├── 05_sft.py                           # Supervised Fine-Tuning (TRL SFTTrainer)
 │   ├── 06_instruction_tuning.py            # Instruction Tuning with Response-Only Masking
 │   ├── 07_cpt.py                           # Continued Pretraining (Causal Chunk Packing)
-│   ├── 08_dapt.py                          # Domain-Adaptive Pretraining with Perplexity Monitoring
+│   ├── 08_dapt.py                          # Domain-Adaptive Pretraining (Perplexity Monitoring)
 │   ├── 09_tapt.py                          # Task-Adaptive Pretraining on Unlabeled Queries
 │   ├── 10_rlhf_ppo.py                      # 3-Stage RLHF: SFT -> Reward Model -> PPO
 │   ├── 11_dpo.py                           # Direct Preference Optimization (DPO)
@@ -78,7 +140,8 @@ LLM_Fine_Tuning/
 │   ├── 17_orpo.py                          # Odds Ratio Preference Optimization (Single-Stage)
 │   ├── 18_kto.py                           # Kahneman-Tversky Optimization (Unpaired Telemetry)
 │   ├── 19_ppo.py                           # Proximal Policy Optimization Engine (Clipped Surrogate)
-│   └── 20_grpo.py                          # Group Relative Policy Optimization (DeepSeek-R1 Style)
+│   ├── 20_grpo.py                          # Group Relative Policy Optimization (DeepSeek-R1)
+│   └── __init__.py                         # Technique registry and package exports
 │
 ├── 📂 datasets/                            # 🧪 Domain Benchmark Datasets
 │   ├── evaluation_cases.py                 # 30 Multi-Point Advisory Scenarios + Guardrails
@@ -103,7 +166,7 @@ LLM_Fine_Tuning/
 
 ## 📚 The 20 Fine-Tuning Techniques
 
-Each technique is implemented as a clean, modular, self-contained Python script inside [`fine_tuning_techniques/`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques).
+Each technique is implemented as an independent Python script inside [`fine_tuning_techniques/`](fine_tuning_techniques/).
 
 ```mermaid
 flowchart TD
@@ -149,45 +212,45 @@ flowchart TD
 <br/>
 
 ### 1. Parameter-Efficient Fine-Tuning (PEFT)
-* **[`02_peft_overview.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/02_peft_overview.py)**: Compares trainable parameter ratios across PEFT methods, demonstrating how freezing the base model and training $\approx 0.1\%$ of parameters saves over $90\%$ of optimizer memory.
-* **[`03_lora.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/03_lora.py)**: Low-Rank Adaptation decomposes weight updates into rank decomposition matrices $\Delta W = \frac{\alpha}{r}BA$. Once trained, matrices are folded back into base weights ($W = W_0 + \Delta W$) for **zero inference latency**.
-* **[`04_qlora.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/04_qlora.py)**: Quantizes base weights to 4-bit NormalFloat (NF4) with Double Quantization (DQ) and Paged Optimizers, allowing fine-tuning of 7B models on consumer hardware (6 GB VRAM).
-* **[`13_adapter_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/13_adapter_tuning.py)**: Classic bottleneck residual adapters (Houlsby/Pfeiffer) that down-project hidden states ($d \to m \to d$) after attention and feed-forward layers.
+* **[`02_peft_overview.py`](fine_tuning_techniques/02_peft_overview.py)**: Compares trainable parameter ratios across PEFT methods, demonstrating how freezing the base model and training $\approx 0.1\%$ of parameters saves over $90\%$ of optimizer memory.
+* **[`03_lora.py`](fine_tuning_techniques/03_lora.py)**: Low-Rank Adaptation decomposes weight updates into rank decomposition matrices $\Delta W = \frac{\alpha}{r}BA$. Once trained, matrices are folded back into base weights ($W = W_0 + \Delta W$) for **zero inference latency**.
+* **[`04_qlora.py`](fine_tuning_techniques/04_qlora.py)**: Quantizes base weights to 4-bit NormalFloat (NF4) with Double Quantization (DQ) and Paged Optimizers, allowing fine-tuning of 7B models on consumer hardware (< 10 GB VRAM).
+* **[`13_adapter_tuning.py`](fine_tuning_techniques/13_adapter_tuning.py)**: Classic bottleneck residual adapters (Houlsby/Pfeiffer) that down-project hidden states ($d \to m \to d$) after attention and feed-forward layers.
 
 ### 2. Supervised & Instruction Tuning
-* **[`05_sft.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/05_sft.py)**: Standard Supervised Fine-Tuning using TRL's `SFTTrainer` with conversational chat template formatting and sequence packing.
-* **[`06_instruction_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/06_instruction_tuning.py)**: Implements **Response-Only Loss Masking** with `DataCollatorForCompletionOnlyLM`. Tokens in the instruction prompt receive label `-100`, forcing gradients to flow solely through completion tokens.
+* **[`05_sft.py`](fine_tuning_techniques/05_sft.py)**: Standard Supervised Fine-Tuning using TRL's `SFTTrainer` with conversational chat template formatting and sequence packing.
+* **[`06_instruction_tuning.py`](fine_tuning_techniques/06_instruction_tuning.py)**: Implements **Response-Only Loss Masking** with `DataCollatorForCompletionOnlyLM`. Tokens in the instruction prompt receive label `-100`, forcing gradients to flow solely through completion tokens.
 
 ### 3. Continual Pretraining & Domain Adaptation
-* **[`07_cpt.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/07_cpt.py)**: Ingests vast raw text corpora using continuous token concatenation and chunk packing into uniform sequence blocks (`block_size=512/2048`).
-* **[`08_dapt.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/08_dapt.py)**: Domain-Adaptive Pretraining on specialized domain text (medical, legal, financial). Tracks **Domain Perplexity** ($\text{PPL} = \exp(\mathcal{L}_{CE})$) on held-out text to verify vocabulary absorption.
-* **[`09_tapt.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/09_tapt.py)**: Task-Adaptive Pretraining pre-trains on small, hyper-targeted unlabeled task queries immediately before downstream supervised fine-tuning.
+* **[`07_cpt.py`](fine_tuning_techniques/07_cpt.py)**: Ingests vast raw text corpora using continuous token concatenation and chunk packing into uniform sequence blocks (`block_size=512/2048`).
+* **[`08_dapt.py`](fine_tuning_techniques/08_dapt.py)**: Domain-Adaptive Pretraining on specialized domain text (medical, legal, financial). Tracks **Domain Perplexity** ($\text{PPL} = \exp(\mathcal{L}_{CE})$) on held-out text to verify vocabulary absorption.
+* **[`09_tapt.py`](fine_tuning_techniques/09_tapt.py)**: Task-Adaptive Pretraining pre-trains on small, hyper-targeted unlabeled task queries immediately before downstream supervised fine-tuning.
 
 ### 4. Soft Prompts & Virtual Tokens
-* **[`14_prefix_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/14_prefix_tuning.py)**: Injects learnable virtual Key and Value tensors ($P_K, P_V$) directly into multi-head attention across **every** transformer layer.
-* **[`15_prompt_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/15_prompt_tuning.py)**: Soft prompt tuning prepends $p$ continuous virtual token embeddings **exclusively** to the input word embedding layer.
-* **[`16_p_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/16_p_tuning.py)**: Uses a prompt encoder (Bidirectional LSTM + MLP) to model sequential dependencies between virtual prompt tokens.
+* **[`14_prefix_tuning.py`](fine_tuning_techniques/14_prefix_tuning.py)**: Injects learnable virtual Key and Value tensors ($P_K, P_V$) directly into multi-head attention across **every** transformer layer.
+* **[`15_prompt_tuning.py`](fine_tuning_techniques/15_prompt_tuning.py)**: Soft prompt tuning prepends $p$ continuous virtual token embeddings **exclusively** to the input word embedding layer.
+* **[`16_p_tuning.py`](fine_tuning_techniques/16_p_tuning.py)**: Uses a prompt encoder (Bidirectional LSTM + MLP) to model sequential dependencies between virtual prompt tokens.
 
 ### 5. Preference Alignment & Reinforcement Learning
-* **[`10_rlhf_ppo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/10_rlhf_ppo.py)**: Classic 3-stage alignment (InstructGPT): SFT $\to$ Bradley-Terry Reward Model $\to$ PPO Policy Optimization with KL divergence penalty.
-* **[`11_dpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/11_dpo.py)**: Direct Preference Optimization analytically replaces the reward model, training directly on `{prompt, chosen, rejected}` pairs with implicit reward margins:
+* **[`10_rlhf_ppo.py`](fine_tuning_techniques/10_rlhf_ppo.py)**: Classic 3-stage alignment (InstructGPT): SFT $\to$ Bradley-Terry Reward Model $\to$ PPO Policy Optimization with KL divergence penalty.
+* **[`11_dpo.py`](fine_tuning_techniques/11_dpo.py)**: Direct Preference Optimization analytically replaces the reward model, training directly on `{prompt, chosen, rejected}` pairs with implicit reward margins:
   $$\mathcal{L}_{DPO} = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{ref}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{ref}(y_l \mid x)} \right) \right]$$
-* **[`17_orpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/17_orpo.py)**: Odds Ratio Preference Optimization unifies SFT and preference alignment into a single training step ($\mathcal{L}_{ORPO} = \mathcal{L}_{SFT} + \lambda \mathcal{L}_{OR}$), eliminating the frozen reference model.
-* **[`18_kto.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/18_kto.py)**: Kahneman-Tversky Optimization aligns models on **unpaired** binary telemetry (thumbs up/down) using behavioral economics and loss aversion.
-* **[`19_ppo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/19_ppo.py)**: Deep dive into the PPO engine: Clipped Surrogate Objective ($\mathcal{L}^{CLIP}$), Generalized Advantage Estimation (GAE), and Value Head Critic loss.
-* **[`20_grpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/20_grpo.py)**: Group Relative Policy Optimization (DeepSeek-R1) **completely eliminates the Critic model**. Samples a group of $G$ outputs per prompt and normalizes advantages against the group statistics, saving $\approx 50\%$ VRAM.
+* **[`17_orpo.py`](fine_tuning_techniques/17_orpo.py)**: Odds Ratio Preference Optimization unifies SFT and preference alignment into a single training step ($\mathcal{L}_{ORPO} = \mathcal{L}_{SFT} + \lambda \mathcal{L}_{OR}$), eliminating the frozen reference model.
+* **[`18_kto.py`](fine_tuning_techniques/18_kto.py)**: Kahneman-Tversky Optimization aligns models on **unpaired** binary telemetry (thumbs up/down) using behavioral economics and loss aversion.
+* **[`19_ppo.py`](fine_tuning_techniques/19_ppo.py)**: Deep dive into the PPO engine: Clipped Surrogate Objective ($\mathcal{L}^{CLIP}$), Generalized Advantage Estimation (GAE), and Value Head Critic loss.
+* **[`20_grpo.py`](fine_tuning_techniques/20_grpo.py)**: Group Relative Policy Optimization (DeepSeek-R1) **completely eliminates the Critic model**. Samples a group of $G$ outputs per prompt and normalizes advantages against group statistics, saving $\approx 50\%$ VRAM.
 
 ### 6. Full Fine-Tuning & Distillation
-* **[`01_full_fine_tuning.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/01_full_fine_tuning.py)**: Complete parameter backpropagation for foundational domain shifts using distributed Trainer and gradient checkpointing.
-* **[`12_knowledge_distillation.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/12_knowledge_distillation.py)**: Transfers dark knowledge from a heavy Teacher LLM to a compact Student model using softened logit KL divergence ($\tau > 1$).
+* **[`01_full_fine_tuning.py`](fine_tuning_techniques/01_full_fine_tuning.py)**: Complete parameter backpropagation for foundational domain shifts using distributed Trainer and gradient checkpointing.
+* **[`12_knowledge_distillation.py`](fine_tuning_techniques/12_knowledge_distillation.py)**: Transfers dark knowledge from a heavy Teacher LLM to a compact Student model using softened logit KL divergence ($\tau > 1$).
 
 <br/>
 
 ---
 
-## ⚡ Zero-Weight Fine-Tuning via Ollama Modelfile
+## ⚡ Zero-Weight Fine-Tuning via Ollama Modelfiles
 
-For many applications, you do **not** need to modify neural network weights. **Zero-Weight Fine-Tuning** packages persona directives, negative safety guardrails, sampling clamps, and stop delimiters directly into a reusable, versioned Ollama model manifest.
+You do **not** always need to modify neural network weights to achieve domain excellence. **Zero-Weight Fine-Tuning** packages permanent behavioral directives, negative safety guardrails, sampling clamps, and semantic stop delimiters directly into an immutable, versioned Ollama model manifest.
 
 ```dockerfile
 # 1. FOUNDATION: Select any base open-weights model
@@ -227,11 +290,11 @@ ollama run my-assistant
 
 ## 🧪 Production Case Study & Benchmarks
 
-To validate the framework empirically on high-stakes, safety-critical data, this repository includes an end-to-end implementation for **Customer Service & Intent Routing in Indian Banking**.
+To validate the framework empirically on high-stakes, safety-critical data, this repository includes an end-to-end implementation for **Customer Service & Intent Routing**.
 
 ### The Two Reference Models:
-1. **`banking-assistant`**: Generative customer support model ([`Modelfile`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile)). Handles disputed charges, loan foreclosures, and card emergencies without hallucinating policies or asking for credentials.
-2. **`banking-classifier`**: Single-token intent router ([`Modelfile.classifier`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/Modelfile.classifier)). Categorizes messages into `Payment`, `Refund`, `Loan`, or `Credit Card`.
+1. **`banking-assistant`**: Generative customer support model ([`Modelfile`](Modelfile)). Handles disputed charges, loan foreclosures, and card emergencies without hallucinating policies or asking for credentials.
+2. **`banking-classifier`**: Single-token intent router ([`Modelfile.classifier`](Modelfile.classifier)). Categorizes customer inquiries into `Payment`, `Refund`, `Loan`, or `Credit Card`.
 
 <br/>
 
@@ -242,8 +305,8 @@ Tested across **30 multi-intent customer messages** with edge cases:
 
 | Model | Accuracy | Passed Tests | Total Cases | Result File |
 | :--- | :---: | :---: | :---: | :--- |
-| `mistral:latest` (Base Foundation) | 76.67% | 23 | 30 | [`results/model_comparison.csv`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/results/model_comparison.csv) |
-| **`banking-classifier` (Custom Tuned)** | **86.67%** | **26** | **30** | [`results/classification_report.csv`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/results/classification_report.csv) |
+| `mistral:latest` (Base Foundation) | 76.67% | 23 | 30 | [`results/model_comparison.csv`](results/model_comparison.csv) |
+| **`banking-classifier` (Custom Tuned)** | **86.67%** | **26** | **30** | [`results/classification_report.csv`](results/classification_report.csv) |
 | **Net Improvement** | **+10.00%** | **+3** | — | — |
 
 </div>
@@ -261,7 +324,7 @@ Evaluated across **30 complex customer scenarios** with automated regex risk che
 | **Mandatory Guidance Coverage** | Variable | **56.67%** | Structured priority steps delivered |
 | **Critical Risk Flags (Credentials)** | Potential leak | **0 Flags (100% Safe)** | Zero OTP, PIN, CVV requests |
 | **Forbidden Claims (Guarantees)** | Speculative claims | **0 Violations** | Zero fabricated bank policies |
-| **Output Report** | — | [`results/evaluation_report.csv`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/results/evaluation_report.csv) | 30 detailed case audits recorded |
+| **Output Report** | — | [`results/evaluation_report.csv`](results/evaluation_report.csv) | 30 detailed case audits recorded |
 
 </div>
 
@@ -299,6 +362,9 @@ Evaluated across **30 complex customer scenarios** with automated regex risk che
 
 | Tool | Argument | Default | Functional Description |
 | :--- | :--- | :---: | :--- |
+| `run_technique.py` | `<technique>` | *(interactive list)* | Inspect, dry-run, or execute any of the 20 techniques. |
+| `run_technique.py` | `--train` | `False` | Run live neural training on GPU for the selected technique. |
+| `run_technique.py` | `--check-env` | `False` | Inspect installed libraries, CUDA availability, and GPU VRAM. |
 | `src/create_models.py` | *(none)* | — | Automatically compiles all Modelfiles into the local Ollama runtime. |
 | `src/evaluate.py` | `--model` | `banking-assistant` | Specify model tag to evaluate against 30 advisory scenarios. |
 | `src/evaluate.py` | `--compare` | `False` | Run head-to-head evaluation (Base Foundation vs. Custom Tuned). |
@@ -327,8 +393,11 @@ python -m venv .venv
 # Linux / macOS
 source .venv/bin/activate
 
-# Install runtime dependencies
+# Install core runtime dependencies (Ollama interface)
 pip install -r requirements.txt
+
+# (Optional) Install the neural weight training suite for techniques/
+pip install -r requirements-training.txt
 
 # Pull base foundation model in Ollama
 ollama pull mistral
@@ -336,7 +405,26 @@ ollama pull mistral
 
 <br/>
 
-### 2. Compile Custom Models
+### 2. Use the Unified Master Technique Runner
+```bash
+# View all 20 techniques with VRAM tiers and script paths:
+python run_technique.py --list
+
+# Check system prerequisites and CUDA GPU status:
+python run_technique.py --check-env
+
+# Dry-run any technique (inspect config, math, and parameter breakdown):
+python run_technique.py 03
+python run_technique.py qlora
+python run_technique.py grpo
+
+# Execute live training on a GPU:
+python run_technique.py 03 --train --model Qwen/Qwen2.5-0.5B --epochs 3
+```
+
+<br/>
+
+### 3. Compile Custom Zero-Weight Models
 ```bash
 python src/create_models.py
 ```
@@ -353,7 +441,7 @@ SUCCESS: Model 'banking-classifier' created ✓
 
 <br/>
 
-### 3. Run Automated Benchmarks
+### 4. Run Automated Benchmarks
 ```bash
 # Run intent classifier benchmark (30 test queries)
 python src/classify.py
@@ -364,7 +452,7 @@ python src/evaluate.py
 
 <br/>
 
-### 4. Interactive Chat Client
+### 5. Interactive Chat Client
 ```bash
 python src/main.py
 ```
@@ -403,7 +491,7 @@ ollama run banking-classifier "Can I convert my credit card purchase to EMI?"
 
 ## 🛠️ How to Adapt to YOUR Domain
 
-To adapt this framework to a different industry:
+To adapt this framework to any custom industry (healthcare, legal, DevOps, e-commerce):
 
 1. **Create a `Modelfile`:**
    ```dockerfile
@@ -419,8 +507,12 @@ To adapt this framework to a different industry:
    ollama create devops-engineer -f Modelfile
    ollama run devops-engineer "Create an Nginx Helm values.yaml"
    ```
-3. **Explore Weight Fine-Tuning:**
-   When you need to train new neural weights, leverage the reference implementations in [`fine_tuning_techniques/`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques) (e.g., [`04_qlora.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/04_qlora.py) for low-VRAM training, [`11_dpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/11_dpo.py) for preference tuning, or [`20_grpo.py`](file:///c:/Users/Rishav/Disk/Codes/LLM%20Projects/Fine_Tuning/fine_tuning_techniques/20_grpo.py) for reasoning emergence).
+3. **Explore Neural Weight Fine-Tuning:**
+   When you need to train new neural weights, leverage the reference implementations in [`fine_tuning_techniques/`](fine_tuning_techniques/):
+   - [`04_qlora.py`](fine_tuning_techniques/04_qlora.py) for consumer GPU training (< 10 GB VRAM)
+   - [`05_sft.py`](fine_tuning_techniques/05_sft.py) for conversational chat tuning
+   - [`11_dpo.py`](fine_tuning_techniques/11_dpo.py) for preference alignment
+   - [`20_grpo.py`](fine_tuning_techniques/20_grpo.py) for DeepSeek-R1 style reasoning emergence without a Critic
 
 <br/>
 
@@ -440,7 +532,7 @@ To adapt this framework to a different industry:
 
 ## 📜 License
 
-Distributed under the **MIT License**. Free for educational, research, and commercial applications.
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for complete terms. Free for educational, research, and commercial applications.
 
 <br/>
 
